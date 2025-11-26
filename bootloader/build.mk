@@ -1,0 +1,39 @@
+CFLAGS += -DUSE_STDPERIPH_DRIVER
+
+ASRC += $(COMMON_BUILD)/arm/startup/startup_$(MCU_DEVICE_LC).S
+ASFLAGS += -I$(COMMON_BUILD)/arm/startup
+
+# Linker flags
+LDFLAGS += -Wl,-Map,$(TARGET_BASE).map
+
+LINKER_DEPS += $(COMMON_BUILD)/arm/linker/linker_module_start.ld
+LINKER_DEPS += $(COMMON_BUILD)/arm/linker/linker_module_end.ld
+LINKER_DEPS += $(COMMON_BUILD)/arm/linker/linker_module_info.ld
+
+ifeq (,$(BOOTLOADER_MODULE_DEPENDENCY))
+BOOTLOADER_MODULE_DEPENDENCY=0,0,0
+endif
+
+ifeq (,$(BOOTLOADER_MODULE_DEPENDENCY2))
+BOOTLOADER_MODULE_DEPENDENCY2=0,0,0
+endif
+
+GLOBAL_DEFINES += BOOTLOADER_VERSION=$(BOOTLOADER_VERSION)
+GLOBAL_DEFINES += MODULE_VERSION=$(BOOTLOADER_VERSION)
+GLOBAL_DEFINES += MODULE_FUNCTION=$(MODULE_FUNCTION_BOOTLOADER)
+GLOBAL_DEFINES += MODULE_DEPENDENCY=$(BOOTLOADER_MODULE_DEPENDENCY)
+GLOBAL_DEFINES += MODULE_DEPENDENCY2=$(BOOTLOADER_MODULE_DEPENDENCY2)
+GLOBAL_DEFINES += LOG_DISABLE
+
+# select sources from platform
+
+# import common main.c under bootloader/src
+include $(BOOTLOADER_MODULE_PATH)/src/sources.mk
+
+# import the sources from the platform
+include $(call rwildcard,$(BOOTLOADER_MODULE_PATH)/src/$(PLATFORM_NAME)/,sources.mk)
+
+
+
+
+
