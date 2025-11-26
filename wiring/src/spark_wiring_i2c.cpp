@@ -234,3 +234,7 @@ namespace detail {
 const WireTransmission WIRE_INVALID_TRANSMISSION(0xff);
 } // detail
 } // particle
+
+int I2CScan(uint8_t* addresses, size_t max_addresses) {
+    return hal_i2c_scan(0, addresses, max_addresses); // Use bus 0 by default
+}

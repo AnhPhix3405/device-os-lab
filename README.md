@@ -136,3 +136,30 @@ The Tinker application provides a simple interface for interacting with the pins
 ### Notes
 - Ensure your device is connected to the Particle Cloud before using these functions.
 - For more details, refer to the inline comments in the source code.
+
+## I2C Scanner Utility
+
+The I2C scanner utility allows you to detect devices connected to the I2C bus. It scans all valid I2C addresses and returns the addresses of the detected devices.
+
+### Usage Example
+
+```cpp
+#include "spark_wiring_i2c.h"
+
+void setup() {
+    uint8_t addresses[10];
+    int count = I2CScan(addresses, 10);
+
+    if (count > 0) {
+        for (int i = 0; i < count; i++) {
+            Serial.printf("Found device at address: 0x%02X\n", addresses[i]);
+        }
+    } else {
+        Serial.println("No I2C devices found.");
+    }
+}
+
+void loop() {
+    // Your code here
+}
+```
