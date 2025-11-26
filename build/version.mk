@@ -1,4 +1,4 @@
-VERSION_STRING = 6.3.4
+VERSION_STRING = 1.1.0
 
 # PRODUCT_FIRMWARE_VERSION reported by default
 # FIXME: Unclear if this is used, PRODUCT_FIRMWARE_VERSION defaults to 65535 every release
