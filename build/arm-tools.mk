@@ -89,6 +89,10 @@ endif
 
 CFLAGS += -DARM_CPU_$(shell echo $(ARM_CPU) | tr '-' '_' | tr 'a-z' 'A-Z')
 
+# Ensure consistent optimization flags for size reduction
+CFLAGS += -Os -ffunction-sections -fdata-sections
+LDFLAGS += --gc-sections
+
 # NOTE: this does not enable LTO! This allows to build object files
 # that can be linked with LTO enabled and disabled (https://gcc.gnu.org/onlinedocs/gccint/LTO-Overview.html)
 # If LTO is disabled, LTO information is simply discarded. These parameters
