@@ -25,4 +25,5 @@ GENERATE_LATEX = NO
 # Add the Tinker application directory to the INPUT list
 INPUT = \
     user/applications/tinker \
+    docs/adc_calibration.md \
     ...

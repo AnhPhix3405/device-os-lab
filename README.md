@@ -192,3 +192,38 @@ Serial.println(sub); // Output: World
 String str("Hello World");
 Serial.print(str); // Output: Hello World
 ```
+
+## ADC Calibration Process
+
+Analog-to-Digital Converter (ADC) calibration ensures accurate analog readings by compensating for hardware variations. This process is essential for applications requiring precise analog measurements.
+
+### When to Calibrate
+- After manufacturing or hardware changes.
+- When using a new device for the first time.
+- Periodically, to maintain accuracy over time.
+
+### How to Calibrate
+1. Use the `adcCalibrate()` function provided in the wiring API.
+2. Ensure the ADC input pins are in a known state (e.g., connected to ground or a reference voltage).
+3. Call the function in your setup code:
+
+```cpp
+#include "spark_wiring_adc.h"
+
+void setup() {
+    if (adcCalibrate()) {
+        Serial.println("ADC Calibration Successful");
+    } else {
+        Serial.println("ADC Calibration Failed");
+    }
+}
+
+void loop() {
+    // Your code here
+}
+```
+
+### Notes
+- Calibration may take a few seconds to complete.
+- Ensure stable power supply during calibration.
+- Refer to the detailed guide in `docs/adc_calibration.md` for more information.
