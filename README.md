@@ -4,9 +4,31 @@
 
 This is the main source code repository of the Particle firmware libraries.
 
+# Device OS
+
+Device OS is the operating system for Particle devices. It provides a robust and secure foundation for IoT applications.
+
+## New Features
+
+### Power Consumption Logging
+- Logs battery level and power consumption metrics.
+- Helps monitor and optimize energy usage.
+
+### Custom LED Blink Patterns
+- Allows users to define and apply custom LED blink patterns.
+- Useful for signaling device states or events.
+
+### Improved Network State Transitions
+- Enhances the reliability of network connectivity.
+- Handles state transitions more robustly to ensure seamless operation.
+
 # Getting Started
 
 To get started building firmware locally, see [Getting Started](docs/gettingstarted.md).
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to this project.
 
 # Resources
 
