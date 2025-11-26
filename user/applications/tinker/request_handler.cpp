@@ -148,6 +148,12 @@ int RequestHandler::request(ctrl_request* ctrlReq) {
     return 0;
 }
 
+void setCustomLEDBlinkPattern(const char* pattern) {
+    // Placeholder implementation: Replace with actual LED control logic
+    Log.info("Setting custom LED blink pattern: %s", pattern);
+    // Add logic to parse and apply the pattern
+}
+
 int RequestHandler::request(Request* req) {
 #ifdef ENABLE_FQC_FUNCTIONALITY
     // Check for FQC commands
@@ -163,6 +169,10 @@ int RequestHandler::request(Request* req) {
     } else
 #endif
     if (req->isEmpty()) { // Ping request
+        return SYSTEM_ERROR_NONE;
+    } else if (req->has("ledPattern")) {
+        auto pattern = req->get("ledPattern").toString().c_str();
+        setCustomLEDBlinkPattern(pattern);
         return SYSTEM_ERROR_NONE;
     } else {
         return SYSTEM_ERROR_NOT_SUPPORTED;

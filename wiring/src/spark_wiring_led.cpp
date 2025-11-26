@@ -16,6 +16,7 @@
  */
 
 #include "spark_wiring_led.h"
+#include "spark_wiring_logging.h"
 
 // particle::LEDStatus
 particle::LEDStatus::LEDStatus(uint32_t color, LEDPattern pattern, uint16_t period, LEDPriority priority, LEDSource source) {
@@ -44,4 +45,22 @@ void particle::LEDSystemTheme::setSignal(LEDSignal signal, uint32_t color, LEDPa
     setColor(signal, color);
     setPattern(signal, pattern);
     setPeriod(signal, period);
+}
+
+// Function to implement custom LED blink patterns
+void setCustomLEDBlinkPattern(const char* pattern) {
+    Log.info("Applying custom LED blink pattern: %s", pattern);
+
+    // Example: Parse the pattern and apply it
+    // This is a placeholder implementation
+    for (const char* p = pattern; *p != '\0'; ++p) {
+        if (*p == '1') {
+            // Turn LED on
+            Log.info("LED ON");
+        } else if (*p == '0') {
+            // Turn LED off
+            Log.info("LED OFF");
+        }
+        // Add delay or timing logic here
+    }
 }
