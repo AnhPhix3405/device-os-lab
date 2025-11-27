@@ -41,6 +41,11 @@ using namespace particle;
 //------------------------------------------------------------------------------------------
 
 void dtoa (double val, unsigned char prec, char *sout) {
+    if (!sout)
+    {
+        return; // Safety check for null pointer
+    }
+
     bool negative = val<0;
     if (negative) {
         val = -val;
@@ -222,6 +227,12 @@ void String::invalidate(void)
 
 unsigned char String::reserve(unsigned int size)
 {
+    // Prevent integer overflow in allocation
+    if (size > (UINT_MAX - 1))
+    {
+        return 0;
+    }
+
     if (buffer && capacity_ >= size) {
         return 1;
     }
@@ -263,6 +274,12 @@ unsigned char String::changeBuffer(unsigned int maxStrLen)
 
 String & String::copy(const char *cstr, unsigned int length)
 {
+    if (!cstr || length == 0)
+    {
+        invalidate();
+        return *this;
+    }
+
     if (!reserve(length)) {
         invalidate();
         return *this;

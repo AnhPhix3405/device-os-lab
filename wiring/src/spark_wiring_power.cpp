@@ -73,6 +73,12 @@ TwoWire* pmicWireInstance() {
 }
 
 uint32_t findClosestMatchingSum(uint32_t value, uint32_t baseOffset, uint32_t bits, uint32_t bitsBaseShift) {
+    // Validate input parameters
+    if (bits > 32 || bitsBaseShift > 31)
+    {
+        return 0;
+    }
+
     uint32_t best = 0;
     int bestDelta = 0x7fffffff;
     for (uint32_t mask = 0; mask <= (uint32_t)((1 << bits) - 1); mask++) {

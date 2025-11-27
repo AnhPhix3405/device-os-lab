@@ -48,6 +48,11 @@ bool Servo::attach(uint16_t pin,
     int16_t minAngle,
     int16_t maxAngle)
 {
+    // Validate pulse width parameters
+    if (minPW >= maxPW || minAngle >= maxAngle)
+    {
+        return false;
+    }
 
   if (hal_pin_validate_function(pin, PF_TIMER)!=PF_TIMER)
   {

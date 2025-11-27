@@ -41,7 +41,11 @@ static const uint8_t clock_divisors[] = {SPI_CLOCK_DIV2,   SPI_CLOCK_DIV4,  SPI_
 /**
  * \brief Divisor Shift Scale
  *
- * Calculates how far a clock value should be right-shifted
+ * Calculates how far a clock value should be right-shifted to determine
+ * the appropriate SPI clock divisor for a given frequency.
+ *
+ * \param divider The SPI clock divider value (e.g., SPI_CLOCK_DIV2, SPI_CLOCK_DIV4)
+ * \return The shift scale value (1-8), or arraySize if divider not found
  */
 uint8_t divisorShiftScale(uint8_t divider)
 {
