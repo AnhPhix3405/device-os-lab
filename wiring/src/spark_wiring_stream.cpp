@@ -68,12 +68,17 @@ int Stream::peekNextDigit()
   int c = -1;
   while (1) {
     c = timedPeek();
-    // timeout
+    // timeout or valid digit/sign found
     if ((c < 0) || (c == '-') || (c >= '0' && c <= '9'))
     {
         break;
     }
-    read();  // discard non-numeric
+    // Discard non-numeric character
+    int discarded = read();
+    if (discarded < 0)
+    {
+        break; // Timeout during discard
+    }
   }
   return c;
 }
