@@ -8,8 +8,36 @@ Over time, these will be rectified as automated checks for style consistency are
 
 - indentation at 4 spaces
 - braces on the next line for function bodies
-- single statement bodies (`if`/`for` etc..) should always have braces, even though they are notstrictly required. This is to reduce errors due to missing braces for multi-line bodies the code is extended. 
+- single statement bodies (`if`/`for` etc..) should always have braces, even though they are not strictly required. This is to reduce errors due to missing braces for multi-line bodies when the code is extended. 
 - functions/methods should generally be smaller than 40 lines and avoid nesting deeper than 6 levels
+
+### Example: Proper Brace Usage
+
+**Good:**
+```cpp
+if (condition)
+{
+    doSomething();
+}
+```
+
+**Avoid:**
+```cpp
+if (condition) doSomething();
+```
+
+### Example: Function Formatting
+
+**Good:**
+```cpp
+void calculateSum(int a, int b)
+{
+    int result = a + b;
+    Serial.println(result);
+}
+```
+
+**Note:** Function opening brace should be on the next line.
 
 ## doc-comments
 - using doxygen format
@@ -21,6 +49,26 @@ Over time, these will be rectified as automated checks for style consistency are
 - data members first and then any constructors
 - private/protected methods appear after public methods
 - use `override` for virtual functions in derived classes
+
+### Example: Class Structure
+
+```cpp
+class DeviceManager
+{
+private:
+    int deviceId;
+    String deviceName;
+
+public:
+    DeviceManager(int id, String name);
+    
+    void initialize();
+    int getDeviceId() const;
+    
+protected:
+    void internalUpdate();
+};
+```
 
 Code should be written to be legible, comprehensible and testable. Writing unit tests in tandem with writing the product code can help highlight design issues early on, leading to early refactoring and a cleaner design.
 

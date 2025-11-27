@@ -9,6 +9,50 @@ Whenever possible, please follow these guidelines for contributions:
 - Wherever possible, provide unit tests for your contributions.
 - If the changes have an impact application developers, then those changes should be described in the documentation. 
 
+## Example Pull Request Process
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-new-feature`
+3. Make your changes following the style guide
+4. Add tests for your changes
+5. Commit your changes: `git commit -m "Add new feature"`
+6. Push to the branch: `git push origin feature/my-new-feature`
+7. Submit a pull request
+
+## Commit Message Guidelines
+
+Follow these conventions for commit messages:
+
+- Use the present tense ("Add feature" not "Added feature")
+- Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
+- Limit the first line to 72 characters or less
+- Reference issues and pull requests after the first line
+- Use prefixes: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `test:`, `chore:`
+
+**Example:**
+```
+feat: add support for new sensor module
+
+- Implement driver for XYZ sensor
+- Add configuration options
+- Update documentation
+
+Closes #123
+```
+
+## Code Review Guidelines
+
+When reviewing pull requests, please consider:
+
+- **Functionality**: Does the code work as intended?
+- **Style**: Does it follow the project's style guide?
+- **Tests**: Are there adequate tests for the changes?
+- **Documentation**: Are the changes properly documented?
+- **Performance**: Could there be any performance implications?
+- **Security**: Are there any security concerns?
+
+Be constructive and respectful in your feedback. 
+
 
 # Tests and Documentation
 

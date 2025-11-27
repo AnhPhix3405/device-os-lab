@@ -1,8 +1,22 @@
 [![CircleCI](https://circleci.com/gh/particle-iot/device-os/tree/develop.svg?style=svg)](https://circleci.com/gh/particle-iot/device-os/tree/develop)
+[![License](https://img.shields.io/badge/license-LGPL--3.0-blue.svg)](LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/particle-iot/device-os.svg)](https://github.com/particle-iot/device-os/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/particle-iot/device-os.svg)](https://github.com/particle-iot/device-os/stargazers)
 
 # Particle Device OS Firmware
 
 This is the main source code repository of the Particle firmware libraries.
+
+## Table of Contents
+
+- [Device OS](#device-os)
+- [New Features](#new-features)
+- [Getting Started](#getting-started)
+- [Code Examples](#code-examples)
+- [Tinker Application](#tinker-application)
+- [Resources](#resources)
+- [Contributing](#contributing)
+- [License](#license)
 
 # Device OS
 
@@ -25,6 +39,19 @@ Device OS is the operating system for Particle devices. It provides a robust and
 ## Getting Started
 
 To get started with Device OS, follow the instructions below:
+
+### Prerequisites
+
+Before building Device OS, ensure you have:
+
+- **ARM GCC Toolchain**: For cross-compilation to ARM targets
+- **Make**: Build automation tool
+- **Git**: Version control system
+- **Python**: For build scripts (version 2.7 or 3.x)
+
+For detailed dependency information, see [Dependencies](docs/dependencies.md).
+
+### Building the Project
 
 1. Clone the repository:
    ```bash

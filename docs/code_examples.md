@@ -2,6 +2,14 @@
 
 This document provides code examples for common use cases when working with Device OS.
 
+## Table of Contents
+1. [Logging Power Consumption](#1-logging-power-consumption)
+2. [Setting Custom LED Blink Patterns](#2-setting-custom-led-blink-patterns)
+3. [Handling Network State Transitions](#3-handling-network-state-transitions)
+4. [Debugging Wi-Fi Signal Strength](#4-debugging-wi-fi-signal-strength)
+5. [Timer-based Operations](#5-timer-based-operations)
+6. [Error Handling Best Practices](#6-error-handling-best-practices)
+
 ## 1. Logging Power Consumption
 
 ```cpp
@@ -68,6 +76,44 @@ int getWiFiSignalStrength() {
         return WiFi.RSSI();
     }
     return -1; // Wi-Fi not ready
+}
+```
+
+## 5. Timer-based Operations
+
+```cpp
+#include "application.h"
+
+Timer periodicTimer(5000, periodicCallback);
+
+void periodicCallback() {
+    Log.info("Timer callback executed every 5 seconds");
+    // Add your periodic task here
+}
+
+void setup() {
+    periodicTimer.start();
+}
+```
+
+## 6. Error Handling Best Practices
+
+```cpp
+#include "application.h"
+
+int safeSensorRead(int pin) {
+    if (pin < 0 || pin > 20) {
+        Log.error("Invalid pin number: %d", pin);
+        return -1;
+    }
+    
+    int value = analogRead(pin);
+    if (value < 0) {
+        Log.warn("Failed to read from pin %d", pin);
+        return -1;
+    }
+    
+    return value;
 }
 ```
 
