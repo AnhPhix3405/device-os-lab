@@ -38,6 +38,11 @@ CANChannel::CANChannel(HAL_CAN_Channel channel,
 
 void CANChannel::begin(unsigned long baud, uint32_t flags)
 {
+    // Validate baud rate - common CAN speeds
+    if (baud == 0 || baud > 1000000)
+    {
+        return; // Invalid baud rate
+    }
     HAL_CAN_Begin(_channel, baud, flags, NULL);
 }
 
