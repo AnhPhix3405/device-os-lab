@@ -75,6 +75,44 @@ This guide provides solutions to common issues encountered while working with De
 - Enable verbose logging with `Log.level(LOG_LEVEL_ALL)`
 - Use `Serial.println()` for immediate console output during development
 
+## Debugging Tools
+
+Debugging tools can help identify and resolve issues in your application. Below are some recommended tools and their usage:
+
+### GDB (GNU Debugger)
+- **Description**: A powerful debugger for C/C++ applications.
+- **Usage**:
+  ```bash
+  gdb <executable>
+  ```
+- **Features**: Breakpoints, stack traces, memory inspection.
+
+### Valgrind
+- **Description**: A tool for memory debugging, memory leak detection, and profiling.
+- **Usage**:
+  ```bash
+  valgrind --leak-check=full <executable>
+  ```
+- **Features**: Detects memory leaks, invalid memory access, and more.
+
+### Serial Debugging
+- **Description**: Use serial output to debug embedded applications.
+- **Usage**:
+  ```bash
+  screen /dev/ttyUSB0 115200
+  ```
+- **Features**: Real-time logging and debugging.
+
+### Particle CLI
+- **Description**: A command-line interface for Particle devices.
+- **Usage**:
+  ```bash
+  particle serial monitor
+  ```
+- **Features**: Device monitoring, firmware flashing, and diagnostics.
+
+By leveraging these tools, you can efficiently debug and resolve issues in your application.
+
 ## Additional Resources
 - [Debugging Guide](debugging.md) - Comprehensive debugging documentation
 - [Build Documentation](build.md) - Build system troubleshooting
