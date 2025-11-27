@@ -88,3 +88,12 @@ The code guidelines [here](http://stroustrup.com/JSF-AV-rules.pdf) offer some go
 - Ensure all troubleshooting guides are clear and concise.
 - Include code examples where applicable.
 - Follow the existing style for headings and formatting.
+
+### Memory Optimization Tips
+
+- **Avoid Dynamic Memory Allocation**: Use static or stack memory whenever possible to reduce fragmentation.
+- **Minimize Global Variables**: Excessive use of global variables can lead to higher memory usage and harder debugging.
+- **Use Smaller Data Types**: Choose the smallest data type that can hold your data (e.g., `uint8_t` instead of `int` for small values).
+- **Free Unused Memory**: Ensure that dynamically allocated memory is freed when no longer needed.
+- **Optimize Data Structures**: Use memory-efficient data structures like bitfields or unions where applicable.
+- **Profile Memory Usage**: Regularly profile your application to identify memory bottlenecks and optimize accordingly.
