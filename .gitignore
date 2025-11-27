@@ -72,3 +72,8 @@ node_modules/
 # Code coverage
 coverage/
 
+# Exclude debug logs
+*.log
+*.debug.log
+logs/
+
