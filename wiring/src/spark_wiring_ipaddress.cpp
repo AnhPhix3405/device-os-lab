@@ -57,7 +57,14 @@ IPAddress::IPAddress(uint32_t addr)
 
 IPAddress::IPAddress(const uint8_t* addr)
 {
-    set_ipv4(addr[0], addr[1], addr[2], addr[3]);
+    if (addr)
+    {
+        set_ipv4(addr[0], addr[1], addr[2], addr[3]);
+    }
+    else
+    {
+        clear();
+    }
 }
 
 IPAddress::operator bool() const
