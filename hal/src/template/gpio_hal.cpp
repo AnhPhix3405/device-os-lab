@@ -24,15 +24,31 @@
  */
 
 /* Includes -----------------------------------------------------------------*/
+#include <stdint.h>
+#include <stdbool.h>
 #include "gpio_hal.h"
 
 /* Private typedef ----------------------------------------------------------*/
+
+/**
+ * @brief Debounce state structure for GPIO pins.
+ */
+typedef struct {
+    uint32_t last_read_time; // Timestamp of the last stable read
+    int32_t last_stable_state; // Last stable state of the pin
+    uint32_t debounce_time; // Debounce time in milliseconds
+} gpio_debounce_state_t;
 
 /* Private define -----------------------------------------------------------*/
 
 /* Private macro ------------------------------------------------------------*/
 
 /* Private variables --------------------------------------------------------*/
+
+/**
+ * @brief Array to store debounce states for each pin (assuming a fixed number of pins)
+ */
+static gpio_debounce_state_t debounce_states[MAX_GPIO_PINS];
 
 /* Extern variables ---------------------------------------------------------*/
 
@@ -81,12 +97,39 @@ void hal_gpio_write(uint16_t pin, uint8_t value)
 /*
  * @brief Reads the value of a GPIO pin. Should return either 1 (HIGH) or 0 (LOW).
  */
-int32_t hal_gpio_read(uint16_t pin)
-{
+int32_t hal_gpio_read(uint16_t pin) {
+    uint32_t current_time = hal_get_millis(); // Assume a function to get current time in ms
+    int32_t current_state = hal_gpio_raw_read(pin); // Assume a raw read function
+
+    gpio_debounce_state_t* state = &debounce_states[pin];
+
+    if (current_state != state->last_stable_state) {
+        if ((current_time - state->last_read_time) >= state->debounce_time) {
+            state->last_stable_state = current_state;
+            state->last_read_time = current_time;
+        }
+    } else {
+        state->last_read_time = current_time;
+    }
+
+    return state->last_stable_state;
+}
+
+int hal_gpio_configure(hal_pin_t pin, const hal_gpio_config_t* conf, void* reserved) {
+    if (conf->debounce_time > 0) {
+        debounce_states[pin].debounce_time = conf->debounce_time;
+    }
     return 0;
 }
 
-int hal_gpio_configure(hal_pin_t pin, const hal_gpio_config_t* conf, void* reserved)
-{
-    return 0;
+// Mock implementation of hal_get_millis to return a dummy timestamp
+uint32_t hal_get_millis() {
+    static uint32_t dummy_time = 0;
+    return dummy_time += 10; // Increment by 10ms for each call
+}
+
+// Mock implementation of hal_gpio_raw_read to simulate raw GPIO reads
+int32_t hal_gpio_raw_read(uint16_t pin) {
+    // Simulate a HIGH state for demonstration purposes
+    return 1;
 }

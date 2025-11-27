@@ -29,6 +29,7 @@
 
 /* Includes -----------------------------------------------------------------*/
 #include "pinmap_hal.h"
+#include <stdint.h>
 
 /* Exported types -----------------------------------------------------------*/
 
@@ -62,7 +63,12 @@ typedef struct {
 
     // Drive strength
     uint8_t drive_strength;
+
+    // Debounce time in milliseconds
+    uint32_t debounce_time;
 } hal_gpio_config_t;
+
+#define MAX_GPIO_PINS 64 // Define the maximum number of GPIO pins
 
 #define HAL_GPIO_VERSION_1 (1)
 #define HAL_GPIO_VERSION   (HAL_GPIO_VERSION_1)
