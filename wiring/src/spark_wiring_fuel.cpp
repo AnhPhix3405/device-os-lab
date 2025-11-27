@@ -118,7 +118,10 @@ float FuelGauge::getVCell() {
     byte MSB = 0;
     byte LSB = 0;
 
-    if (readRegister(VCELL_REGISTER, MSB, LSB) != SYSTEM_ERROR_NONE) {
+    int result = readRegister(VCELL_REGISTER, MSB, LSB);
+    if (result != SYSTEM_ERROR_NONE)
+    {
+        // Return negative value to indicate error
         return -1.0f;
     }
     return particle::detail::_getVCell(MSB, LSB);
