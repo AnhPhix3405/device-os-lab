@@ -122,4 +122,13 @@ into the subtree in this repo.
 - Place new third-party libraries in the appropriate subdirectory under `third_party/`.
 - Ensure the library is properly documented and follows the new directory structure guidelines.
 
+### Adding Logging API Examples
+
+When adding examples for the new logging API, follow these steps:
+
+1. **Create a New Example**: Write a concise and functional example demonstrating the logging API's usage.
+2. **Place in Documentation**: Add the example to the `docs/logging.md` file under the "Examples" section.
+3. **Verify Functionality**: Ensure the example is functional and adheres to the project's style guide.
+4. **Reference in PR**: When submitting a pull request, reference the example in the PR description.
+
 

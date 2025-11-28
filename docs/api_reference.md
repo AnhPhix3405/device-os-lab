@@ -13,6 +13,7 @@ This document provides a quick reference for the most commonly used APIs in Devi
 - [Cloud Functions](#cloud-functions)
 - [Time](#time)
 - [System](#system)
+- [Logging API Examples](#logging-api-examples)
 
 ## Digital I/O
 
@@ -169,6 +170,39 @@ System.reset();
 ```
 
 Reset the device.
+
+## Logging API Examples
+
+### Example 1: Basic Logging
+
+```cpp
+#include "logging.h"
+
+void setup() {
+    Log.info("System initialized");
+}
+
+void loop() {
+    Log.debug("Loop iteration");
+    delay(1000);
+}
+```
+
+### Example 2: Conditional Logging
+
+```cpp
+#include "logging.h"
+
+void setup() {
+    Log.info("Starting conditional logging example");
+}
+
+void loop() {
+    if (millis() % 5000 == 0) {
+        Log.warn("5 seconds elapsed");
+    }
+}
+```
 
 ## Best Practices
 
