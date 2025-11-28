@@ -1,5 +1,11 @@
 # Getting Started
 
+## Quick Links
+- [Prerequisites & Dependencies](dependencies.md)
+- [Build Documentation](build.md)
+- [Troubleshooting](troubleshooting.md)
+
+## Table of Contents
 1. [Download and Install Dependencies](dependencies.md#1-download-and-install-dependencies)
 2. [Download and Build Repositories](#2-download-and-build-repositories)
 3. [Edit and Rebuild](#3-edit-and-rebuild)
