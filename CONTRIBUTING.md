@@ -135,4 +135,8 @@ When adding examples for the new logging API, follow these steps:
 
 When contributing to the API, ensure that the documentation in `docs/api_reference.md` is updated to reflect your changes. Follow the structure outlined in the file to maintain consistency.
 
+## Troubleshooting Build Errors
+
+If you encounter build errors while contributing, refer to the [Troubleshooting Guide](docs/troubleshooting.md) for solutions to common issues.
+
 

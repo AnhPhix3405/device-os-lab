@@ -65,6 +65,33 @@ This guide provides solutions to common issues encountered while working with De
 - Invalid argument passed to function
 - Verify function parameters
 
+## Common Build Errors
+
+### Error: Missing Dependencies
+**Description**: Build fails due to missing dependencies.
+**Solution**:
+1. Ensure all required tools are installed (e.g., GCC, Make).
+2. Run the appropriate setup script: `ci/install_gcc.sh` or `ci/install_boost.sh`.
+
+### Error: Compilation Fails
+**Description**: Compilation errors occur during the build process.
+**Solution**:
+1. Check the error message for details.
+2. Ensure the code adheres to the style guide.
+3. Run `make clean` and rebuild.
+
+### Error: Linker Errors
+**Description**: Linker errors occur during the build process.
+**Solution**:
+1. Verify that all required libraries are linked.
+2. Check the `makefile` for missing dependencies.
+
+### Error: CI Pipeline Fails
+**Description**: Build fails in the CI pipeline.
+**Solution**:
+1. Review the CI logs for details.
+2. Ensure all tests pass locally before pushing changes.
+
 ## Debugging Tips
 - Use the `Log.info()` function to add debug logs in the code.
 - Check the `logs/` directory for runtime logs.

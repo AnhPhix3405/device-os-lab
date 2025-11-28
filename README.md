@@ -94,7 +94,7 @@ Check out the [Code Examples](docs/code_examples.md) for common use cases and be
 
 ## Troubleshooting
 
-If you encounter issues, refer to the [Troubleshooting Guide](docs/troubleshooting.md) for solutions to common problems.
+For troubleshooting common build errors, refer to the [Troubleshooting Guide](docs/troubleshooting.md).
 
 ## Contributing
 
