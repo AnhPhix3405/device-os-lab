@@ -60,6 +60,11 @@ NetworkClass& NetworkClass::from(network_interface_t nif) {
 }
 
 void NetworkClass::connect(unsigned flags) {
+    if (flags & ~(NETWORK_CONNECT_FLAG_ALL))
+    {
+        // Invalid flags provided
+        return;
+    }
     network_connect(*this, flags, 0, nullptr);
 }
 
