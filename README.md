@@ -439,3 +439,7 @@ The `scripts/` directory has been cleaned up to remove unused scripts. Ensure to
 ## Dependency Updates
 
 Dependencies have been updated to their latest stable versions. Ensure to review the `CONTRIBUTING.md` file for guidelines on maintaining dependencies.
+
+## Pre-Commit Hooks
+
+Pre-commit hooks have been added to enforce code formatting. Run `scripts/setup_hooks.sh` to install the hooks. Refer to the `CONTRIBUTING.md` file for more details.

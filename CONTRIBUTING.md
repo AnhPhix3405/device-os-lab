@@ -159,3 +159,11 @@ When updating dependencies, ensure the following:
 2. Verify that the updates do not introduce breaking changes.
 3. Update any relevant documentation, including `README.md` and `docs/dependencies.md`.
 4. Test the project thoroughly to ensure compatibility with the updated dependencies.
+
+## Pre-Commit Hooks for Code Formatting
+
+To ensure consistent code formatting, pre-commit hooks have been added. These hooks automatically format code before commits are made. Contributors should:
+
+1. Install the pre-commit hooks by running the setup script: `scripts/setup_hooks.sh`.
+2. Ensure all code adheres to the formatting rules defined in `.clang-format`.
+3. Verify that the hooks are functioning correctly by attempting a commit.
