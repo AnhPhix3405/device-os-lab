@@ -27,7 +27,17 @@ size_t Record::getEncodedData(Vector<uint8_t>& vector) const {
 }
 
 TextRecord::TextRecord(const char* text, const char* encoding) {
-    if (text == nullptr || encoding == nullptr) {
+    if (text == nullptr || encoding == nullptr || text[0] == '\0')
+    {
+        LOG(ERROR, "Invalid text or encoding parameter");
+        return;
+    }
+
+    // Validate encoding length
+    size_t encodingLen = strlen(encoding);
+    if (encodingLen > 63)
+    { // Max 6 bits for encoding length
+        LOG(ERROR, "Encoding length exceeds maximum (63)");
         return;
     }
 
@@ -38,8 +48,8 @@ TextRecord::TextRecord(const char* text, const char* encoding) {
 
     // Payload: encoding length + encoding data + text data
     Vector<uint8_t> payload;
-    payload.append(static_cast<uint8_t>(strlen(encoding)));
-    payload.append(reinterpret_cast<const uint8_t*>(encoding), strlen(encoding));
+    payload.append(static_cast<uint8_t>(encodingLen));
+    payload.append(reinterpret_cast<const uint8_t*>(encoding), encodingLen);
     payload.append(reinterpret_cast<const uint8_t*>(text), strlen(text));
     setPayload(payload);
 }
