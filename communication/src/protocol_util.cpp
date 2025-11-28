@@ -59,3 +59,16 @@ int formatDiagnosticPayload(char* buf, size_t size, int error) {
 } // namespace protocol
 
 } // namespace particle
+
+// Refactor shared utilities for communication protocols
+namespace ProtocolUtil {
+
+void logError(const std::string& error) {
+    // Logging utility for protocol errors
+}
+
+void validateMessage(const std::string& message) {
+    // Validation utility for protocol messages
+}
+
+} // namespace ProtocolUtil

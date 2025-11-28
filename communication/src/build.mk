@@ -47,6 +47,20 @@ CPPSRC += $(TARGET_SRC_PATH)/v2/coap_api.cpp
 # ASM source files included in this build.
 ASRC +=
 
+# Update build configuration to reflect modularized structure
+MODULES += coap dtls protocol_util
+
+# Add dependencies for modularized files
+coap_SRCS = coap.cpp coap_channel.cpp coap_message_decoder.cpp coap_message_encoder.cpp
+coap_HDRS = coap_channel.h coap_message_decoder.h coap_message_encoder.h
+
+dtls_SRCS = dtls_protocol.cpp dtls_message_channel.cpp
+
+dtls_HDRS = dtls_protocol.h dtls_message_channel.h
+
+protocol_util_SRCS = protocol_util.cpp
+protocol_util_HDRS = protocol_util.h
+
 # if PLATFORM_ID matches 13 23 25 or 26, and not DEBUG_BUILD=y, set LOG_LEVEL_ERROR
 ifneq (,$(filter $(PLATFORM_ID), 13 15 23 25 26 37))
 ifneq ($(DEBUG_BUILD),y)
