@@ -41,6 +41,52 @@ void loop() {
 - Ensure stable power supply during calibration.
 - Avoid external noise or interference during the process.
 
+### Advanced Example
+
+```cpp
+#include "spark_wiring_adc.h"
+
+void setup() {
+    Serial.begin(9600);
+    
+    // Wait for serial connection
+    while(!Serial.available()) {
+        Particle.process();
+    }
+    
+    Serial.println("Starting ADC calibration...");
+    
+    // Perform calibration
+    if (adcCalibrate()) {
+        Serial.println("✓ ADC Calibration Successful");
+        
+        // Test reading
+        int value = analogRead(A0);
+        Serial.printlnf("Sample reading from A0: %d", value);
+    } else {
+        Serial.println("✗ ADC Calibration Failed");
+    }
+}
+
+void loop() {
+    // Your application code
+}
+```
+
+### Calibration with Multiple Pins
+
+```cpp
+void calibrateMultiplePins() {
+    const int pins[] = {A0, A1, A2, A3};
+    
+    for (int i = 0; i < 4; i++) {
+        pinMode(pins[i], INPUT);
+        int reading = analogRead(pins[i]);
+        Serial.printlnf("Pin A%d: %d", i, reading);
+    }
+}
+```
+
 ## Troubleshooting
 - If calibration fails, ensure the ADC pins are properly connected to a known state.
 - Check the power supply for stability.

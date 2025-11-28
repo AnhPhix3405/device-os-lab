@@ -71,6 +71,11 @@ hal_interrupt_extra_configuration_t* configure_interrupt(hal_interrupt_extra_con
 
 bool attachInterrupt(uint16_t pin, wiring_interrupt_handler_t fn, InterruptMode mode, int8_t priority, uint8_t subpriority)
 {
+    // Validate pin number
+    if (pin >= TOTAL_PINS) {
+        return false;
+    }
+    
     hal_interrupt_detach(pin);
     wiring_interrupt_handler_t* handler = allocate_handler(pin, fn);
     if (handler) {

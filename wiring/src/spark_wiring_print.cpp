@@ -224,6 +224,11 @@ size_t Print::printVariant(const Variant& var) {
 
 size_t Print::vprintf(bool newline, const char* format, va_list args)
 {
+    if (!format)
+    {
+        return 0; // Null format string
+    }
+
     const int bufsize = 20;
     char test[bufsize];
     va_list args2;

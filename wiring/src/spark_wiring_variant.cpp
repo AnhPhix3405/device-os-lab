@@ -47,6 +47,10 @@ public:
     }
 
     size_t write(const uint8_t* data, size_t size) override {
+        if (!data || size == 0)
+        {
+            return 0; // Nothing to write
+        }
         size_ += size;
         return size;
     }

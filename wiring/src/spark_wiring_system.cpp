@@ -49,6 +49,11 @@ void SystemClass::reset(SystemResetFlags flags)
 
 void SystemClass::reset(uint32_t data, SystemResetFlags flags)
 {
+    // Validate data does not contain special values that might conflict
+    if (data == 0xDEADBEEF || data == 0xBADC0DE)
+    {
+        LOG(WARN, "Reset data contains reserved value, proceeding anyway");
+    }
     system_reset(SYSTEM_RESET_MODE_NORMAL, RESET_REASON_USER, data, flags.value(), nullptr);
 }
 

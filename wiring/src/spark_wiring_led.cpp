@@ -49,6 +49,22 @@ void particle::LEDSystemTheme::setSignal(LEDSignal signal, uint32_t color, LEDPa
 
 // Function to implement custom LED blink patterns
 void setCustomLEDBlinkPattern(const char* pattern) {
+    if (!pattern || pattern[0] == '\0')
+    {
+        Log.error("Invalid LED pattern: null or empty");
+        return;
+    }
+
+    // Validate pattern contains only '0' and '1'
+    for (const char* p = pattern; *p != '\0'; ++p)
+    {
+        if (*p != '0' && *p != '1')
+        {
+            Log.error("Invalid LED pattern: contains invalid character '%c'", *p);
+            return;
+        }
+    }
+
     Log.info("Applying custom LED blink pattern: %s", pattern);
 
     // Example: Parse the pattern and apply it

@@ -44,6 +44,11 @@ const jsmntok_t* skipToken(const jsmntok_t *t) {
 }
 
 bool hexToInt(const char *s, size_t size, uint32_t *val) {
+    if (!s || !val || size == 0 || size > 8)
+    {
+        return false; // Invalid input or size too large for uint32_t
+    }
+
     uint32_t v = 0;
     const char* const end = s + size;
     while (s != end) {
