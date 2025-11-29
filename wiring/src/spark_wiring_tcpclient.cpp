@@ -181,6 +181,10 @@ int TCPClient::read()
 
 int TCPClient::read(uint8_t *buffer, size_t size)
 {
+    if (!buffer || size == 0)
+    {
+        return -1;
+    }
         int read = -1;
         if (bufferCount() || available())
         {
