@@ -152,6 +152,10 @@ int BleAddress::set(const hal_ble_addr_t& addr) {
 }
 
 int BleAddress::set(const uint8_t addr[BLE_SIG_ADDR_LEN], BleAddressType type) {
+    if (!addr)
+    {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     address_.addr_type = static_cast<ble_sig_addr_type_t>(type);
     memcpy(address_.addr, addr, BLE_SIG_ADDR_LEN);
     return SYSTEM_ERROR_NONE;
@@ -186,6 +190,10 @@ int BleAddress::set(const String& address, BleAddressType type) {
 }
 
 void BleAddress::octets(uint8_t addr[BLE_SIG_ADDR_LEN]) const {
+    if (!addr)
+    {
+        return;
+    }
     memcpy(addr, address_.addr, BLE_SIG_ADDR_LEN);
 }
 
