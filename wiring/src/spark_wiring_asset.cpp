@@ -123,6 +123,10 @@ int ApplicationAsset::peek(char* buffer, size_t size) {
 }
 
 int ApplicationAsset::skip(size_t size) {
+    if (size == 0)
+    {
+        return 0;
+    }
     CHECK(prepareForReading());
     return asset_manager_skip(data_->stream, size, nullptr);
 }
