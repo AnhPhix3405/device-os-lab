@@ -45,6 +45,10 @@ STATIC_ASSERT(system_version_info_size, sizeof(SystemVersionInfo)==28);
 
 int system_version_info(SystemVersionInfo* info, void* /*reserved*/)
 {
+    if (!info)
+    {
+        return sizeof(SystemVersionInfo);
+    }
     if (info)
     {
         if (info->size>=28)

@@ -27,6 +27,10 @@ namespace system {
 static std::atomic<bool> monitoring_enabled{false};
 
 void start_memory_monitoring(unsigned interval_ms) {
+    if (interval_ms == 0)
+    {
+        return;
+    }
     monitoring_enabled = true;
     std::thread([](unsigned interval) {
         while (monitoring_enabled) {
