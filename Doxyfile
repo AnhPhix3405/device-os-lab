@@ -1,7 +1,7 @@
 PROJECT_NAME           = "Device OS API Documentation"
 OUTPUT_DIRECTORY       = docs/doxygen_output
-INPUT                  = docs/api_reference.md
-FILE_PATTERNS          = *.h *.hh *.hpp *.dox *.md
+INPUT                  = docs/api_reference.md src/ include/
+FILE_PATTERNS          = *.h *.hh *.hpp *.dox *.md *.cpp
 USE_MDFILE_AS_MAINPAGE = docs/api_reference.md
 RECURSIVE              = YES
 
@@ -13,3 +13,14 @@ EXCLUDE_PATTERNS = \
 
 GENERATE_TREEVIEW      = YES
 SHOW_INCLUDE_FILES     = NO
+
+# Enable additional features
+GENERATE_LATEX         = NO
+GENERATE_HTML          = YES
+GENERATE_XML           = YES
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = NO
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
