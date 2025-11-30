@@ -495,4 +495,8 @@ workflows:
           name: "Validate User List Display"
           command: |
             curl -f $USER_API_ENDPOINT || echo "User list endpoint validation failed"
+      - run:
+          name: "Run Login Unit Tests"
+          command: |
+            ./run_tests.sh --filter login_tests
 
