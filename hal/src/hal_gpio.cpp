@@ -17,6 +17,10 @@ int hal_gpio_pulse(hal_pin_t pin, uint32_t duration_ms) {
     if (!hal_pin_validate(pin)) {
         return -1; // Invalid pin
     }
+    if (duration_ms == 0)
+    {
+        return -1; // Invalid duration
+    }
     pinMode(pin, OUTPUT);
     digitalWrite(pin, HIGH);
     HAL_Delay_Milliseconds(duration_ms); // Pulse duration

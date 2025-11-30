@@ -32,7 +32,7 @@ uint16_t CoAPMessage::message_count = 0;
 
 bool is_ack_or_reset(const uint8_t* buf, size_t len)
 {
-	if (len<1)
+	if (!buf || len<1)
 		return false;
 	CoAPType::Enum type = CoAP::type(buf);
 	return type==CoAPType::ACK || type==CoAPType::RESET;
@@ -40,6 +40,9 @@ bool is_ack_or_reset(const uint8_t* buf, size_t len)
 
 ProtocolError CoAPMessageStore::send_message(CoAPMessage* msg, Channel& channel)
 {
+	if (!msg) {
+		return INVALID_MESSAGE;
+	}
 	Message m((uint8_t*)msg->get_data(), msg->get_data_length(), msg->get_data_length());
 	m.decode_id();
 	return channel.send(m);
@@ -50,6 +53,9 @@ ProtocolError CoAPMessageStore::send_message(CoAPMessage* msg, Channel& channel)
  */
 bool CoAPMessageStore::retransmit(CoAPMessage* msg, Channel& channel, system_tick_t now)
 {
+	if (!msg) {
+		return false;
+	}
 	bool retransmit = (msg->prepare_retransmit(now));
 	if (retransmit)
 	{

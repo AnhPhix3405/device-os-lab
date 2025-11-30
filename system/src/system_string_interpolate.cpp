@@ -51,7 +51,11 @@ size_t variable_length(const char* s)
  */
 size_t system_string_interpolate(const char* source, char* dest, size_t dest_len, string_interpolate_source_t vars)
 {
-	if (source && dest) {
+    if (!source || !dest || dest_len == 0 || !vars)
+    {
+        return 0;
+    }
+        if (source && dest) {
 		char* dest_end = dest+dest_len;
 		for (;dest<dest_end;)
 		{

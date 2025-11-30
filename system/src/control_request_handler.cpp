@@ -22,6 +22,10 @@
 namespace particle {
 
 int ControlRequestChannel::allocReplyData(ctrl_request* req, size_t size) {
+    if (!req)
+    {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     if (size > 0) {
         const auto data = (char*)realloc(req->reply_data, size);
         if (!data) {
@@ -37,6 +41,10 @@ int ControlRequestChannel::allocReplyData(ctrl_request* req, size_t size) {
 }
 
 void ControlRequestChannel::freeRequestData(ctrl_request* req) {
+    if (!req)
+    {
+        return;
+    }
     free(req->request_data);
     req->request_data = nullptr;
     req->request_size = 0;
