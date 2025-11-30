@@ -430,7 +430,27 @@ For detailed hardware setup instructions, refer to the [Hardware Setup Guide](do
 
 ## API Documentation
 
-For detailed API documentation, refer to the [API Reference](docs/api_reference.md).
+The Device OS API provides endpoints for user authentication, device management, and data retrieval. Below are some key features:
+
+- **Authentication**: Secure login and logout endpoints.
+- **User Management**: Retrieve user details and manage accounts.
+- **Device Control**: Interact with and manage connected devices.
+
+### Getting Started with the API
+
+1. **Authentication**:
+   - Use the `/api/login` endpoint to authenticate and retrieve a token.
+   - Include the token in the `Authorization` header for subsequent requests.
+
+2. **Example Request**:
+   ```bash
+   curl -X POST https://api.example.com/api/login \
+   -H "Content-Type: application/json" \
+   -d '{"username": "user", "password": "pass"}'
+   ```
+
+3. **Explore More**:
+   - Refer to the [API Reference](docs/api_reference.md) for detailed documentation.
 
 ## Scripts Cleanup
 

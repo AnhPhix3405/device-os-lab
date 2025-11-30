@@ -1,8 +1,8 @@
-PROJECT_NAME           = "Device OS Lab API Documentation"
+PROJECT_NAME           = "Device OS API Documentation"
 OUTPUT_DIRECTORY       = docs/doxygen_output
 INPUT                  = docs/api_reference.md
 FILE_PATTERNS          = *.h *.hh *.hpp *.dox *.md
-USE_MDFILE_AS_MAINPAGE = docs/doxygen/mainpage.md
+USE_MDFILE_AS_MAINPAGE = docs/api_reference.md
 RECURSIVE              = YES
 
 EXCLUDE_PATTERNS = \
@@ -11,12 +11,5 @@ EXCLUDE_PATTERNS = \
   */communication/tests/* \
   */test/*
 
-OPTIMIZE_OUTPUT_FOR_C = YES
-HIDE_UNDOC_CLASSES = YES
-HIDE_UNDOC_MEMBERS = YES
-SHOW_INCLUDE_FILES = NO
-MAX_INITIALIZER_LINES = 4
-INLINE_INFO = NO
-SOURCE_BROWSER = YES
-GENERATE_LATEX = NO
 GENERATE_TREEVIEW      = YES
+SHOW_INCLUDE_FILES     = NO

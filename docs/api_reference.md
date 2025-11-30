@@ -18,7 +18,63 @@ The API allows developers to interact with the system programmatically. This sec
 
 ## API Endpoints
 
-Detailed information about each endpoint, including request and response formats.
+### Login API
+- **Endpoint**: `/api/login`
+- **Method**: POST
+- **Request Body**:
+  ```json
+  {
+    "username": "string",
+    "password": "string"
+  }
+  ```
+- **Response**:
+  - **200 OK**:
+    ```json
+    {
+      "token": "string",
+      "expires_in": 3600
+    }
+    ```
+  - **401 Unauthorized**:
+    ```json
+    {
+      "error": "Invalid credentials"
+    }
+    ```
+
+### Logout API
+- **Endpoint**: `/api/logout`
+- **Method**: POST
+- **Request Body**: None
+- **Response**:
+  - **200 OK**:
+    ```json
+    {
+      "message": "Logged out successfully"
+    }
+    ```
+
+### User Info API
+- **Endpoint**: `/api/user`
+- **Method**: GET
+- **Headers**:
+  - `Authorization: Bearer <token>`
+- **Response**:
+  - **200 OK**:
+    ```json
+    {
+      "id": "string",
+      "username": "string",
+      "email": "string"
+    }
+    ```
+  - **401 Unauthorized**:
+    ```json
+    {
+      "error": "Invalid or expired token"
+    }
+    ```
 
 ## Examples
 
