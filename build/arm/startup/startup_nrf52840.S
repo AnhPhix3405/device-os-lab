@@ -205,213 +205,1463 @@ __isr_vector:
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
-    .size __isr_vector, . - __isr_vector
-
-/* Reset Handler */
-
-
-    .text
-    .thumb
-    .thumb_func
-    .align 1
-    .globl Reset_Handler
-    .type Reset_Handler, %function
-Reset_Handler:
-
-
-/* Loop to copy data from read only memory to RAM.
- * The ranges of copy from/to are specified by following symbols:
- *      __etext: LMA of start of the section to copy from. Usually end of text
- *      link_global_data_start: VMA of start of the section to copy to.
- *      link_bss_location: VMA of end of the section to copy to. Normally link_global_data_end is used, but by using link_bss_location
- *                    the user can add their own initialized data section before BSS section with the INTERT AFTER command.
- *
- * All addresses must be aligned to 4 bytes boundary.
- */
-    ldr r1, =link_global_data_initial_values
-    ldr r2, =link_global_data_start
-    ldr r3, =link_bss_location
-
-    subs r3, r2
-    ble .L_loop1_done
-
-.L_loop1:
-    subs r3, #4
-    ldr r0, [r1,r3]
-    str r0, [r2,r3]
-    bgt .L_loop1
-
-.L_loop1_done:
-
-/* This part of work usually is done in C library startup code. Otherwise,
- * define __STARTUP_CLEAR_BSS to enable it in this startup. This section
- * clears the RAM where BSS data is located.
- *
- * The BSS section is specified by following symbols
- *    link_bss_location: start of the BSS section.
- *    link_bss_end: end of the BSS section.
- *
- * All addresses must be aligned to 4 bytes boundary.
- */
-/* Enable by default */
-#ifndef __STARTUP_CLEAR_BSS
-#define __STARTUP_CLEAR_BSS 1
-#endif
-#ifdef __STARTUP_CLEAR_BSS
-    ldr r1, =link_bss_location
-    ldr r2, =link_bss_end
-
-    movs r0, 0
-
-    subs r2, r1
-    ble .L_loop3_done
-
-.L_loop3:
-    subs r2, #4
-    str r0, [r1, r2]
-    bgt .L_loop3
-
-.L_loop3_done:
-#endif /* __STARTUP_CLEAR_BSS */
-
-/* Execute SystemInit function. */
-    bl SystemInit
-
-/* Call _start function provided by libraries.
- * If those libraries are not accessible, define __START as your entry point.
- */
-#ifndef __START
-#define __START main
-#endif
-    .include "spark_init.S"
-    bl __START
-
-    .pool
-    .size   Reset_Handler,.-Reset_Handler
-
-    .section ".text"
-
-
-/* Dummy Exception Handlers (infinite loops which can be modified) */
-
-    .weak   NMI_Handler
-    .type   NMI_Handler, %function
-NMI_Handler:
-    b       .
-    .size   NMI_Handler, . - NMI_Handler
-
-
-    .weak   HardFault_Handler
-    .type   HardFault_Handler, %function
-HardFault_Handler:
-    b       .
-    .size   HardFault_Handler, . - HardFault_Handler
-
-
-    .weak   MemoryManagement_Handler
-    .type   MemoryManagement_Handler, %function
-MemoryManagement_Handler:
-    b       .
-    .size   MemoryManagement_Handler, . - MemoryManagement_Handler
-
-
-    .weak   BusFault_Handler
-    .type   BusFault_Handler, %function
-BusFault_Handler:
-    b       .
-    .size   BusFault_Handler, . - BusFault_Handler
-
-
-    .weak   UsageFault_Handler
-    .type   UsageFault_Handler, %function
-UsageFault_Handler:
-    b       .
-    .size   UsageFault_Handler, . - UsageFault_Handler
-
-
-    .weak   SVC_Handler
-    .type   SVC_Handler, %function
-SVC_Handler:
-    b       .
-    .size   SVC_Handler, . - SVC_Handler
-
-
-    .weak   DebugMon_Handler
-    .type   DebugMon_Handler, %function
-DebugMon_Handler:
-    b       .
-    .size   DebugMon_Handler, . - DebugMon_Handler
-
-
-    .weak   PendSV_Handler
-    .type   PendSV_Handler, %function
-PendSV_Handler:
-    b       .
-    .size   PendSV_Handler, . - PendSV_Handler
-
-
-    .weak   SysTick_Handler
-    .type   SysTick_Handler, %function
-SysTick_Handler:
-    b       .
-    .size   SysTick_Handler, . - SysTick_Handler
-
-
-/* IRQ Handlers */
-
-    .globl  Default_Handler
-    .type   Default_Handler, %function
-Default_Handler:
-    b       .
-    .size   Default_Handler, . - Default_Handler
-
-    .macro  IRQ handler
-    .weak   \handler
-    .set    \handler, Default_Handler
-    .endm
-
-    IRQ  POWER_CLOCK_IRQHandler
-    IRQ  RADIO_IRQHandler
-    IRQ  UARTE0_UART0_IRQHandler
-    IRQ  SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler
-    IRQ  SPIM1_SPIS1_TWIM1_TWIS1_SPI1_TWI1_IRQHandler
-    IRQ  NFCT_IRQHandler
-    IRQ  GPIOTE_IRQHandler
-    IRQ  SAADC_IRQHandler
-    IRQ  TIMER0_IRQHandler
-    IRQ  TIMER1_IRQHandler
-    IRQ  TIMER2_IRQHandler
-    IRQ  RTC0_IRQHandler
-    IRQ  TEMP_IRQHandler
-    IRQ  RNG_IRQHandler
-    IRQ  ECB_IRQHandler
-    IRQ  CCM_AAR_IRQHandler
-    IRQ  WDT_IRQHandler
-    IRQ  RTC1_IRQHandler
-    IRQ  QDEC_IRQHandler
-    IRQ  COMP_LPCOMP_IRQHandler
-    IRQ  SWI0_EGU0_IRQHandler
-    IRQ  SWI1_EGU1_IRQHandler
-    IRQ  SWI2_EGU2_IRQHandler
-    IRQ  SWI3_EGU3_IRQHandler
-    IRQ  SWI4_EGU4_IRQHandler
-    IRQ  SWI5_EGU5_IRQHandler
-    IRQ  TIMER3_IRQHandler
-    IRQ  TIMER4_IRQHandler
-    IRQ  PWM0_IRQHandler
-    IRQ  PDM_IRQHandler
-    IRQ  MWU_IRQHandler
-    IRQ  PWM1_IRQHandler
-    IRQ  PWM2_IRQHandler
-    IRQ  SPIM2_SPIS2_SPI2_IRQHandler
-    IRQ  RTC2_IRQHandler
-    IRQ  I2S_IRQHandler
-    IRQ  FPU_IRQHandler
-    IRQ  USBD_IRQHandler
-    IRQ  UARTE1_IRQHandler
-    IRQ  QSPI_IRQHandler
-    IRQ  CRYPTOCELL_IRQHandler
-    IRQ  PWM3_IRQHandler
-    IRQ  SPIM3_IRQHandler
-
-  .end
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */
+    .long   0                           /*Reserved */

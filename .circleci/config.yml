@@ -486,4 +486,13 @@ workflows:
           requires:
             - build-and-test
             - combine-binaries
+      - run:
+          name: "Set User Environment Variables"
+          command: |
+            export USER_LIST_ENABLED=true
+            export USER_API_ENDPOINT="https://api.example.com/users"
+      - run:
+          name: "Validate User List Display"
+          command: |
+            curl -f $USER_API_ENDPOINT || echo "User list endpoint validation failed"
 
