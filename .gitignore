@@ -92,3 +92,12 @@ bootloader/
 scripts/
 workbench/
 
+# Ignore IDE-specific files
+.workbench/
+
+# Ignore temporary scripts
+scripts/*.tmp
+
+# Ignore unused third-party libraries
+third_party/unused_library/
+
