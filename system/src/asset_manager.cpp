@@ -76,6 +76,10 @@ int parseAssetDependencies(Vector<Asset>& assets, hal_storage_id storageId, uint
 }
 
 int parseAssetInfo(InputStream* stream, size_t size, Asset& asset) {
+    if (!stream || size == 0)
+    {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     Buffer nameExtBuf;
     AssetHash hash;
     while (size > 0) {
