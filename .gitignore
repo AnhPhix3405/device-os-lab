@@ -101,3 +101,34 @@ scripts/*.tmp
 # Ignore unused third-party libraries
 third_party/unused_library/
 
+# Build artifacts
+build/*
+*.bin
+*.elf
+*.hex
+*.log
+*.tmp
+*.dep
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.tlog
+*.pch
+*.suo
+*.sdf
+*.ipch
+*.rsp
+*.lst
+*.map
+*.dmp
+*.log
+*.cmd
+*.mk
+*.manifest
+*.tlog
+*.log
+*.pyc
+*.pyo
+*.egg-info/
+
