@@ -110,6 +110,38 @@ To set up the Device OS firmware, follow these steps:
 
 For more details, refer to the [API Reference](docs/api_reference.md).
 
+## Project Setup Instructions
+
+To set up the project, follow these steps:
+
+### Prerequisites
+Ensure you have the following tools installed on your system:
+
+- **Git**: Version control system ([Download Git](https://git-scm.com/))
+- **ARM GCC Toolchain**: For cross-compilation ([Install ARM GCC](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm))
+- **Make**: Build automation tool ([Install Make](https://www.gnu.org/software/make/))
+- **Python**: For build scripts (version 3.x recommended) ([Install Python](https://www.python.org/downloads/))
+
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/uniquelo05/device-os-lab.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd device-os-lab
+   ```
+3. Build the project:
+   ```bash
+   make all
+   ```
+4. Flash the firmware to your device:
+   ```bash
+   make flash
+   ```
+
+For additional setup details, refer to the [Getting Started Guide](docs/gettingstarted.md).
+
 ## Code Examples
 
 ### Memory Usage Monitoring
