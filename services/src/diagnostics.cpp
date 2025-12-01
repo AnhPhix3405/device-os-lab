@@ -28,6 +28,10 @@ using namespace spark;
 class Diagnostics {
 public:
     int registerSource(const diag_source* src) {
+        if (!src)
+        {
+            return SYSTEM_ERROR_INVALID_ARGUMENT;
+        }
         if (started_) {
             return SYSTEM_ERROR_INVALID_STATE;
         }
