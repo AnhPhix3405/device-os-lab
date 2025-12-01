@@ -20,6 +20,10 @@
 namespace particle {
 
 size_t escape(const char* src, const char* spec, char esc, char* dest, size_t destSize) {
+    if (!src || !spec || !dest || destSize == 0)
+    {
+        return 0;
+    }
     size_t n = 0;
     for (;;) {
         const char c = *src++;
