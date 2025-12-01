@@ -57,3 +57,7 @@
 	path = third_party/new_library
 	url = https://github.com/example/new_library.git
 	branch = main
+[submodule "third_party/new_submodule"]
+	path = third_party/new_submodule
+	url = https://github.com/example/new_submodule.git
+	branch = main
