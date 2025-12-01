@@ -24,3 +24,20 @@ EXPAND_ONLY_PREDEF     = NO
 EXTRACT_ALL            = YES
 EXTRACT_PRIVATE        = NO
 EXTRACT_STATIC         = YES
+
+# Updated Doxygen configuration for better documentation
+PROJECT_BRIEF          = "Comprehensive documentation for Device OS."
+FULL_PATH_NAMES        = NO
+SORT_MEMBER_DOCS       = YES
+SORT_BRIEF_DOCS        = YES
+GENERATE_SOURCE_BROWSER= YES
+REFERENCES_LINK_SOURCE = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = YES
+SHOW_USED_FILES        = YES
+SHOW_FILES             = YES
+SHOW_NAMESPACES        = YES
+GENERATE_TAGFILE       = docs/doxygen_output/tags
+ALIASES                += "note=\par Note:\n"
+ALIASES                += "todo=\par TODO:\n"
