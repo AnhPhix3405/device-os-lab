@@ -92,6 +92,7 @@ bootloader/
 scripts/
 workbench/
 
+
 # Ignore IDE-specific files
 .workbench/
 
