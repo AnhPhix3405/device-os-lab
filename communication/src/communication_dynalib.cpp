@@ -1,4 +1,3 @@
-
 #include "spark_protocol_functions.h"
 #include "service_debug.h"
 #include "protocol_selector.h"
@@ -39,12 +38,18 @@ ProtocolFacade* create_protocol(ProtocolFactory factory)
 
 ProtocolFacade* spark_protocol_instance(void)
 {
-	static ProtocolFacade* protocol = nullptr;
+    static ProtocolFacade* protocol = nullptr;
 
-	if (!protocol) {
-		bool udp = HAL_Feature_Get(FEATURE_CLOUD_UDP);
-		DEBUG("UDP enabled %d", udp);
-		protocol = create_protocol(udp ? PROTOCOL_DTLS : PROTOCOL_LIGHTSSL);
-	}
-	return protocol;
+    if (!protocol) {
+        bool udp = HAL_Feature_Get(FEATURE_CLOUD_UDP);
+        DEBUG("UDP enabled %d", udp);
+
+        protocol = create_protocol(udp ? PROTOCOL_DTLS : PROTOCOL_LIGHTSSL);
+
+        if (!protocol) {
+            ERROR("Failed to create protocol instance. Unsupported protocol type or memory allocation issue.");
+            return nullptr;
+        }
+    }
+    return protocol;
 }
