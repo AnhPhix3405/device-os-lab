@@ -37,6 +37,19 @@ void loop() {
 }
 ```
 
+### Checklist
+
+- [ ] I have signed the Contributor License Agreement (CLA)
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] I have added necessary documentation (if appropriate)
+- [ ] I have ensured that my code follows the style guidelines of this project
+- [ ] I have performed a self-review of my code
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation
+- [ ] My changes generate no new warnings
+- [ ] I have checked my code and corrected any misspellings
+- [ ] Any dependent changes have been merged and published in downstream modules
+
 ### References
 
 Links to the Community, Docs, Other Issues, etc..
