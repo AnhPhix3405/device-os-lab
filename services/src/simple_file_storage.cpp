@@ -32,6 +32,10 @@ SimpleFileStorage::SimpleFileStorage(const char* fileName) :
 }
 
 int SimpleFileStorage::load(void* data, size_t size) {
+    if (!data || size == 0)
+    {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     const auto fs = filesystem_get_instance(FILESYSTEM_INSTANCE_DEFAULT, nullptr);
     if (!fs) {
         return SYSTEM_ERROR_FILE;
@@ -70,6 +74,10 @@ int SimpleFileStorage::load(void* data, size_t size) {
 }
 
 int SimpleFileStorage::save(const void* data, size_t size) {
+    if (!data || size == 0)
+    {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     const auto fs = filesystem_get_instance(FILESYSTEM_INSTANCE_DEFAULT, nullptr);
     if (!fs) {
         return SYSTEM_ERROR_FILE;
