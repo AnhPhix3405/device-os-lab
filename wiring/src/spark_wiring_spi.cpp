@@ -278,6 +278,14 @@ byte SPIClass::transfer(byte _data)
 void SPIClass::transfer(const void* tx_buffer, void* rx_buffer, size_t length,
                         wiring_spi_dma_transfercomplete_callback_t user_callback)
 {
+    if (!tx_buffer && !rx_buffer)
+    {
+        return;
+    }
+    if (length == 0)
+    {
+        return;
+    }
     hal_spi_transfer_dma(_spi, tx_buffer, rx_buffer, length, user_callback);
     if (user_callback == NULL)
     {

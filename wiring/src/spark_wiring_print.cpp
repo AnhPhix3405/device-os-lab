@@ -104,6 +104,9 @@ void writeVariant(const Variant& var, JSONStreamWriter& writer) {
 /* default implementation: may be overridden */
 size_t Print::write(const uint8_t *buffer, size_t size)
 {
+  if (!buffer || size == 0) {
+    return 0;
+  }
   size_t n = 0;
   while (size--) {
      int chunk = write(*buffer++);
@@ -120,6 +123,9 @@ size_t Print::write(const uint8_t *buffer, size_t size)
 
 size_t Print::print(const char str[])
 {
+  if (!str) {
+    return 0;
+  }
   return write(str);
 }
 

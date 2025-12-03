@@ -715,7 +715,11 @@ ProtocolError Protocol::post_description(int desc_flags, bool force)
 
 ProtocolError Protocol::send_subscription(const char *event_name, int flags)
 {
-	const ProtocolError error = subscriptions.send_subscription(channel, event_name, flags);
+    if (!event_name)
+    {
+        return ProtocolError::INVALID_ARGUMENT;
+    }
+        const ProtocolError error = subscriptions.send_subscription(channel, event_name, flags);
 	if (error == ProtocolError::NO_ERROR && descriptor.app_state_selector_info) {
 		subscription_msg_ids.append(subscriptions.subscription_message_ids());
 	}

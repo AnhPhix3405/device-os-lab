@@ -238,6 +238,10 @@ float Stream::parseFloat(char skipChar){
 //
 size_t Stream::readBytes(char *buffer, size_t length)
 {
+    if (!buffer || length == 0)
+    {
+        return 0;
+    }
   size_t count = 0;
   while (count < length) {
     int c = timedRead();
@@ -255,7 +259,10 @@ size_t Stream::readBytes(char *buffer, size_t length)
 
 size_t Stream::readBytesUntil(char terminator, char *buffer, size_t length)
 {
-  if (length < 1) return 0;
+    if (!buffer || length < 1)
+    {
+        return 0;
+    }
   size_t index = 0;
   while (index < length) {
     int c = timedRead();
@@ -292,6 +299,10 @@ String Stream::readStringUntil(char terminator)
 
 void serialReadLine(Stream *serialObj, char *dst, int max_len, system_tick_t timeout, void(*idle_cb)(int count))
 {
+    if (!serialObj || !dst || max_len <= 0)
+    {
+        return;
+    }
     char c = 0, i = 0;
     system_tick_t last_millis = millis();
     system_tick_t cb_millis = last_millis;

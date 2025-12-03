@@ -312,6 +312,10 @@ int spark_set_connection_property(unsigned property, unsigned value, const void*
 
 int spark_get_connection_property(unsigned property, void* data, size_t* size, void* reserved)
 {
+    if (!data || !size)
+    {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     SYSTEM_THREAD_CONTEXT_SYNC(spark_get_connection_property(property, data, size, reserved));
     switch (property) {
     case SPARK_CLOUD_MAX_EVENT_DATA_SIZE:

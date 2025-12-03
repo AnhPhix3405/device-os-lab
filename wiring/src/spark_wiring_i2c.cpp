@@ -154,6 +154,10 @@ size_t TwoWire::write(uint8_t data)
 // or after beginTransmission(address)
 size_t TwoWire::write(const uint8_t *data, size_t quantity)
 {
+    if (!data || quantity == 0)
+    {
+        return 0;
+    }
   // in master/slave transmitter mode
   for(size_t i = 0; i < quantity; ++i)
   {
