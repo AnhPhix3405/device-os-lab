@@ -16,3 +16,18 @@ test(Cloud_Reconnection_Failure) {
     bool result = cloud_reconnect_with_retry();
     assertFalse(result);
 }
+
+test(Cloud_Reconnection_NoNetwork) {
+    // Simulate no network available
+    cloud_reconnection_init();
+    bool result = cloud_reconnect_with_retry();
+    assertFalse(result);
+}
+
+test(Cloud_Reconnection_Timeout) {
+    // Simulate timeout during reconnection
+    cloud_reconnection_init();
+    set_reconnection_timeout(5000); // Set a short timeout
+    bool result = cloud_reconnect_with_retry();
+    assertFalse(result);
+}

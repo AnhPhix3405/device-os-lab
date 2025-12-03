@@ -40,3 +40,10 @@ ConstructorTestClass ConstructorTest(TEST_VALUE);
 test(CONSTRUCTOR_Invoked_During_System_Initialization) {
     assertEqual(ConstructorTest.isConstructorInvoked(), true);
 }
+
+// Added additional test to verify constructor behavior with different values
+test(CONSTRUCTOR_Not_Invoked_With_Different_Value) {
+    initVar = 0; // Reset initVar
+    ConstructorTestClass TestInstance(99999);
+    assertEqual(ConstructorTestClass::isConstructorInvoked(), false);
+}
