@@ -27,6 +27,10 @@
 #include <nrf52840.h>
 
 int set_watchpoint(const void* addr, size_t size, int type) {
+    if (!addr) {
+        LOG(ERROR, "Invalid address pointer");
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     size_t numComp = (DWT->CTRL >> 28) & 0x0f;
     if (!numComp) {
         LOG(ERROR, "Watchpoints are not supported");
