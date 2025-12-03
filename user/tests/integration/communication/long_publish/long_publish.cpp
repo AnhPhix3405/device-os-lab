@@ -108,6 +108,49 @@ inline String scopedEventName(const char* name) {
     return System.deviceID() + '/' + name;
 }
 
+void enhancedEventHandler(const char* name, const char* data) {
+    NAMED_SCOPE_GUARD(sg, {
+        sEventNotHandled = true;
+    });
+    if (!data) {
+        Test::out->printlnf("Error: Event data is null");
+        return;
+    }
+    auto d = std::strchr(data, ' ');
+    if (!d) {
+        Test::out->printlnf("Error: Invalid event format");
+        return;
+    }
+    size_t prefixLen = d - data;
+    size_t dataLen = std::strlen(d) + prefixLen;
+    if (dataLen != EVENT_DATA_SIZE) {
+        Test::out->printlnf("Error: Unexpected event size");
+        return;
+    }
+    Log.trace("recv %.*s", (int)prefixLen, data);
+    std::memcpy(outEventData, data, prefixLen + 1);
+    SCOPE_GUARD({
+        std::memset(outEventData, 'b', prefixLen + 1); // Restore the fill bytes
+    });
+    bool ok = Particle.publish("devout1", outEventData);
+    if (!ok) {
+        Test::out->printlnf("Error: Failed to publish event, retrying in %ums", RETRY_DELAY);
+        retrying = true;
+        SCOPE_GUARD({
+            retrying = false;
+        });
+        delay(RETRY_DELAY);
+        ok = Particle.publish("devout1", outEventData);
+        if (!ok) {
+            sPublishFailed = true;
+            Test::out->printlnf("Error: Failed to publish event after retry");
+            return;
+        }
+    }
+    Log.trace("send %.*s", (int)prefixLen, outEventData);
+    sg.dismiss();
+}
+
 } // namespace
 
 test(01_connect_and_subscribe) {
