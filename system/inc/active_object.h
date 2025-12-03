@@ -20,112 +20,61 @@
 #pragma once
 
 #include <cstddef>
-
-#if PLATFORM_THREADING
-
 #include <functional>
-#include <mutex>
-#include <thread>
-#include <future>
 #include <cstring>
-
-#include "concurrent_hal.h"
 #include "hal_platform.h"
 
 /**
- * Configuratino data for an active object.
+ * Configuration data for an active object.
  */
-struct ActiveObjectConfiguration
-{
-    /**
-     * Function to call when there are no objects to process in the queue.
-     */
-    typedef std::function<void(void)> background_task_t;
+struct ActiveObjectConfiguration {
+    using background_task_t = std::function<void(void)>;
 
-    /**
-     * The function to run when there is nothing else to do.
-     */
-    background_task_t background_task;
+    background_task_t background_task; // Background task function
+    size_t stack_size = OS_THREAD_STACK_SIZE_DEFAULT; // Thread stack size
+    unsigned take_wait = 0; // Time to wait for a message in the queue
+    unsigned put_wait = 0; // Time to wait to put items in the queue
+    uint16_t queue_size = 0; // Message capacity of the queue
+    os_thread_prio_t priority = OS_THREAD_PRIORITY_DEFAULT; // Thread priority
+    char task_name[64] = "active_object"; // Thread name
 
-    /**
-     * Thread stack size.
-     */
-    size_t stack_size;
-
-    /**
-     * Time to wait for a message in the queue. This governs how often the
-     * background task is executed.
-     */
-    unsigned take_wait;
-
-    /**
-     * How long to wait to put items in the queue before giving up.
-     */
-    unsigned put_wait;
-
-    /**
-     * The message capacity of the queue.
-     */
-    uint16_t queue_size;
-
-    /**
-     * Thread priority.
-     */
-    os_thread_prio_t priority;
-
-    /**
-     * Thread name
-     */
-    char task_name[64];
-    static constexpr const char DEFAULT_TASK_NAME[] = "active_object";
-
-public:
     ActiveObjectConfiguration(background_task_t task, unsigned take_wait_, unsigned put_wait_, uint16_t queue_size_,
-            size_t stack_size_ = OS_THREAD_STACK_SIZE_DEFAULT, os_thread_prio_t priority = OS_THREAD_PRIORITY_DEFAULT,
+            size_t stack_size_ = OS_THREAD_STACK_SIZE_DEFAULT, os_thread_prio_t priority_ = OS_THREAD_PRIORITY_DEFAULT,
             const char* name = nullptr) :
             background_task(task),
             stack_size(stack_size_),
             take_wait(take_wait_),
             put_wait(put_wait_),
             queue_size(queue_size_),
-            priority(priority) {
-        strncpy(task_name, name ? name : DEFAULT_TASK_NAME, sizeof(task_name) - 1);
+            priority(priority_) {
+        strncpy(task_name, name ? name : "active_object", sizeof(task_name) - 1);
     }
 };
 
 /**
  * A message passed to an active object.
  */
-class Message
-{
-
+class Message {
 public:
-    Message() {}
-    virtual void operator()()=0;
-    virtual ~Message() {}
+    virtual void operator()() = 0;
+    virtual ~Message() = default;
 };
 
 /**
- * Abstract task. Subclasses must define invoke() and task_complete()
+ * Abstract task. Subclasses must define invoke() and task_complete().
  */
 template <typename T, typename C>
-class AbstractTask : public Message
-{
+class AbstractTask : public Message {
 protected:
-    /**
-     * The function to invoke to retrieve the future result.
-     */
-    std::function<T(void)> work;
+    std::function<T(void)> work; // Function to invoke
 
 public:
-    inline AbstractTask(const std::function<T()>& fn_) : work(std::move(fn_)) {}
+    explicit AbstractTask(const std::function<T()>& fn_) : work(fn_) {}
 
     void operator()() override {
-        C* that = ((C*)this);
-        that->invoke();
-        that->task_complete();
+        static_cast<C*>(this)->invoke();
+        static_cast<C*>(this)->task_complete();
     }
-
 };
 
 /**
@@ -451,8 +400,6 @@ public:
 };
 
 
-
-#endif // PLATFORM_THREADING
 
 /**
  * This class implements a queue of asynchronous calls that can be scheduled from an ISR and then

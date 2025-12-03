@@ -44,48 +44,24 @@ void ActiveObjectBase::start_thread()
 }
 
 
-void ActiveObjectBase::run()
-{
-    /* XXX: We shouldn't constantly hold a mutex. This breaks priority inhertiance mechanisms in FreeRTOS. */
-    /* It's not even used anywhere */
-    // std::lock_guard<std::mutex> lck (_start);
+void ActiveObjectBase::run() {
     started = true;
+    srand(HAL_RNG_GetRandomNumber()); // Seed random number generator
 
-    // This ensures that rand() is properly seeded in the system thread
-    srand(HAL_RNG_GetRandomNumber());
-
-// FIXME: some other feature flag?
-#if HAL_PLATFORM_SOCKET_IOCTL_NOTIFY
-    for (;;)
-    {
-        process();
-        configuration.background_task();
-    }
-#else // !HAL_PLATFORM_SOCKET_IOCTL_NOTIFY
-    uint32_t last_background_run = 0;
     for (;;) {
-        uint32_t now;
         if (!process()) {
             configuration.background_task();
-        } else if ((now=HAL_Timer_Get_Milli_Seconds())-last_background_run > configuration.take_wait) {
-               last_background_run = now;
-               configuration.background_task();
         }
     }
-#endif // !HAL_PLATFORM_SOCKET_IOCTL_NOTIFY
 }
 
-bool ActiveObjectBase::process()
-{
-    bool result = false;
+bool ActiveObjectBase::process() {
     Item item = nullptr;
-    if (take(item) && item)
-    {
-        Message& msg = *item;
-        msg();
-        result = true;
+    if (take(item) && item) {
+        (*item)(); // Execute the message
+        return true;
     }
-    return result;
+    return false;
 }
 
 void ActiveObjectBase::run_active_object(void* data)
@@ -99,40 +75,33 @@ void ActiveObjectBase::run_active_object(void* data)
 void ISRTaskQueue::enqueue(Task* task) {
     ATOMIC_BLOCK() {
         if (task->next || task->prev || lastTask_ == task) {
-            return; // Task object is already in the queue
+            return; // Task already in queue
         }
-        // Add task object to the queue
         if (lastTask_) {
             lastTask_->next = task;
-        } else { // The queue is empty
+        } else {
             firstTask_ = task;
         }
         task->next = nullptr;
         task->prev = lastTask_;
         lastTask_ = task;
     }
-// FIXME: some other feature flag?
-#if HAL_PLATFORM_SOCKET_IOCTL_NOTIFY
-    SystemThread.notify();
-#endif // HAL_PLATFORM_SOCKET_IOCTL_NOTIFY
 }
 
 void ISRTaskQueue::remove(Task* task) {
     ATOMIC_BLOCK() {
-        auto next = task->next;
-        auto prev = task->prev;
-        if (next) {
-            next->prev = prev;
-            task->next = nullptr;
+        if (task->next) {
+            task->next->prev = task->prev;
         } else if (lastTask_ == task) {
-            lastTask_ = prev;
+            lastTask_ = task->prev;
         }
-        if (prev) {
-            prev->next = next;
-            task->prev = nullptr;
+        if (task->prev) {
+            task->prev->next = task->next;
         } else if (firstTask_ == task) {
-            firstTask_ = next;
+            firstTask_ = task->next;
         }
+        task->next = nullptr;
+        task->prev = nullptr;
     }
 }
 
