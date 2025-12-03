@@ -21,3 +21,19 @@ test(Thread_Safety_Test) {
     // If no deadlock or race condition occurs, the test passes
     assertTrue(true);
 }
+
+test(Null_Pointer_Test) {
+    // Test handling of null pointers in thread_safe_function
+    thread_safe_function(NULL);
+
+    // If no crash occurs, the test passes
+    assertTrue(true);
+}
+
+test(Extreme_Input_Test) {
+    // Test handling of extreme input values
+    thread_safe_function((void*)0xFFFFFFFF);
+
+    // If no crash occurs, the test passes
+    assertTrue(true);
+}
