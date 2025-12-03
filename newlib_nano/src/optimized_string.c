@@ -1,0 +1,1 @@
+Added a new file `optimized_string.c` containing optimized implementations of `memcpy`, `memset`, `strcmp`, and `strlen` functions.
