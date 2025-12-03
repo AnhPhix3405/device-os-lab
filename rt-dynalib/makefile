@@ -1,10 +1,9 @@
-
 MODULE=rt-dynalib
 RT_DYNALIB_MODULE_PATH=.
 
 # Target this makefile is building.
 TARGET_TYPE = a
 BUILD_PATH_EXT = $(RT_DYNALIB_BUILD_PATH_EXT)
-DEPENDENCIES = dynalib hal
+DEPENDENCIES = dynalib hal pthread
 
 include ../build/arm-tlm.mk

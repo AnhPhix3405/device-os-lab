@@ -23,6 +23,7 @@
 #pragma once
 
 #include "dynalib.h"
+#include <pthread.h>
 
 #ifdef DYNALIB_EXPORT
 #include <errno.h>
@@ -69,5 +70,8 @@ DYNALIB_FN(22, rt, __cxa_guard_acquire, int(__guard*))
 DYNALIB_FN(23, rt, __cxa_guard_release, void(__guard*))
 DYNALIB_FN(24, rt, __cxa_guard_abort, void(__guard*))
 #endif // defined(DYNALIB_EXPORT) || defined(DYNALIB_IMPORT)
+
+// Declare thread-safe function
+void thread_safe_function();
 
 DYNALIB_END(rt)

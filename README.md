@@ -545,3 +545,8 @@ Dependencies have been updated to their latest stable versions. Ensure to review
 ## Pre-Commit Hooks
 
 Pre-commit hooks have been added to enforce code formatting. Run `scripts/setup_hooks.sh` to install the hooks. Refer to the `CONTRIBUTING.md` file for more details.
+
+## Race Condition Fix in rt-dynalib
+- Resolved a race condition in the `rt-dynalib` module by introducing a mutex for thread safety.
+- Added unit tests to validate the fix and ensure no deadlocks or race conditions occur.
+- Updated the build system to include `pthread` dependency.
