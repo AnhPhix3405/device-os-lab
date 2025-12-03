@@ -565,3 +565,23 @@ void CallConstructors(void)
 {
 	call_constructors(&link_constructors_location, &link_constructors_end);
 }
+
+/**
+ * Optimization: Reduce redundant checks during boot
+ */
+void platform_startup() {
+    // Initialize only essential peripherals for faster boot
+    core_hal_init_minimal();
+    timer_hal_init();
+
+    // Skip unnecessary LED initialization in safe mode
+    if (!SAFE_MODE) {
+        rgbled_init();
+    }
+
+    // Perform only critical health checks
+    syshealth_hal_check_critical();
+
+    // Proceed to application startup
+    jump_to_system(ApplicationAddress, TimingBUTTON);
+}
