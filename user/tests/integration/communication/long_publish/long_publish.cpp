@@ -25,27 +25,34 @@ bool sPublishFailed = false;
 bool sEventNotHandled = false;
 
 
+// Improved error handling for event publishing
+void handlePublishError(const char* errorMessage) {
+    sPublishFailed = true;
+    Test::out->printlnf("Error: %s", errorMessage);
+    Log.error("%s", errorMessage);
+}
+
 void oldEventHandler(const char* name, const char* data) {
     NAMED_SCOPE_GUARD(sg, {
         sEventNotHandled = true;
     });
     if (retrying) {
-        Test::out->printlnf("Unexpected event");
+        handlePublishError("Unexpected event during retry");
         return;
     }
     if (!data) {
-        Test::out->printlnf("Unexpected event size");
+        handlePublishError("Event data is null");
         return;
     }
     auto d = std::strchr(data, ' ');
     if (!d) {
-        Test::out->printlnf("Invalid event format");
+        handlePublishError("Invalid event format");
         return;
     }
     size_t prefixLen = d - data;
     size_t dataLen = std::strlen(d) + prefixLen;
     if (dataLen != EVENT_DATA_SIZE) {
-        Test::out->printlnf("Unexpected event size");
+        handlePublishError("Unexpected event size");
         return;
     }
     Log.trace("recv %.*s", (int)prefixLen, data);
@@ -55,7 +62,7 @@ void oldEventHandler(const char* name, const char* data) {
     });
     bool ok = Particle.publish("devout1", outEventData);
     if (!ok) {
-        Test::out->printlnf("Failed to publish event, retrying in %ums", RETRY_DELAY);
+        handlePublishError("Failed to publish event, retrying");
         retrying = true;
         SCOPE_GUARD({
             retrying = false;
@@ -63,8 +70,7 @@ void oldEventHandler(const char* name, const char* data) {
         delay(RETRY_DELAY);
         ok = Particle.publish("devout1", outEventData);
         if (!ok) {
-            sPublishFailed = true;
-            Test::out->printlnf("Failed to publish event");
+            handlePublishError("Failed to publish event after retry");
             return;
         }
     }
