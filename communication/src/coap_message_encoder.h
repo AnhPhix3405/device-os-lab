@@ -131,6 +131,15 @@ inline CoapMessageEncoder& CoapMessageEncoder::payload(const char* str) {
     return payload(str, strlen(str));
 }
 
+inline CoapMessageEncoder& CoapMessageEncoder::payload(const char* data, size_t size) {
+    if (size > maxPayloadSize()) {
+        error_ = -1; // Error: Payload size exceeds buffer limit
+        return *this;
+    }
+    // ...existing code...
+    return *this;
+}
+
 } // namespace protocol
 
 } // namespace particle

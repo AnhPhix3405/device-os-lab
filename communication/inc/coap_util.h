@@ -60,6 +60,10 @@ public:
     }
 
     void reset(coap_message* msg = nullptr) {
+        if (msg && msg->size > MAX_BUFFER_SIZE) {
+            LOG(ERROR, "Message size exceeds buffer limit");
+            return;
+        }
         coap_destroy_message(msg_, nullptr);
         msg_ = msg;
     }

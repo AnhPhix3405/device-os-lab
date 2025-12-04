@@ -41,14 +41,14 @@ public:
 
 	virtual ProtocolError create(Message& message, size_t minimum_size=0) override
 	{
-		if (minimum_size>sizeof(queue)-prefix-suffix) {
+		if (minimum_size > sizeof(queue) - prefix - suffix) {
 			LOG(WARN, "Insufficient storage for message size %d", minimum_size);
 			return INSUFFICIENT_STORAGE;
 		}
 		message.clear();
 		message.set_buffer(queue+prefix, sizeof(queue)-suffix-prefix);
 		message.set_length(0);
-		return NO_ERROR;
+		return ProtocolError::SUCCESS;
 	}
 
 	/**

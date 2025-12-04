@@ -620,3 +620,6 @@ int coap_add_opaque_option(coap_message* msg, int num, const char* data, size_t 
 #ifdef __cplusplus
 } // extern "C"
 #endif
+
+// Added macro for maximum buffer size
+#define MAX_BUFFER_SIZE 1024 // Define a reasonable buffer size limit
