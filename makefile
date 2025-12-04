@@ -25,11 +25,12 @@ SUBDIRS := communication hal platform services wiring bootloader main
 
 .PHONY: all clean $(SUBDIRS)
 
+# Parallel build for faster execution
 all: $(SUBDIRS)
 	@echo "Build completed for all modules."
 
 $(SUBDIRS):
-	$(MAKE) -C $@
+	$(MAKE) -C $@ -j$(nproc)
 
 clean:
 	@for dir in $(SUBDIRS); do \
