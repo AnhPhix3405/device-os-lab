@@ -90,7 +90,7 @@ endif
 MAKE_DEPENDENCIES = newlib_nano user wiring hal system services communication platform wiring_globals crypto proto_defs
 DEPENDENCIES = $(MAKE_DEPENDENCIES) dynalib
 
-LIBS += $(MAKE_DEPENDENCIES)
+LIBS += dynalib
 LIB_DEPS += $(USER_LIB_DEP) $(WIRING_LIB_DEP) $(SYSTEM_LIB_DEP) $(SERVICES_LIB_DEP) $(COMMUNICATION_LIB_DEP) $(HAL_LIB_DEP) $(PLATFORM_LIB_DEP) $(WIRING_GLOBALS_LIB_DEP) $(CRYPTO_LIB_DEP) $(PROTO_DEFS_LIB_DEP)
 LIB_DIRS += $(dir $(LIB_DEPS))
 

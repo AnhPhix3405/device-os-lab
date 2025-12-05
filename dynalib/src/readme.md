@@ -115,6 +115,16 @@ In the example, this would be placed after the `.text` section.
 
 Without the module info end structures in place, building `main` will fail since the module info end data isn't present. This includes default SHA256 and CRC32 values that are built into the binary, and the buidl will fail when those do not match the values expected.  This is a sanity check in the build that it's overwriting the correct data when writing the SHA256 and CRC32 hashes to offsets from the end of the file.
 
+# Refactored dynalib
+
+The `dynalib` module has been refactored to improve performance and modularity. Key changes include:
+
+- Optimized memory usage in `module_info`.
+- Improved linker script integration for faster builds.
+- Enhanced thread safety in runtime dynamic library functions.
+
+Refer to the updated API documentation for details.
+
 
 
 

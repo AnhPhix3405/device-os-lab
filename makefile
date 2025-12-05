@@ -58,10 +58,11 @@ new_target:
 # Added dynamic library support for services
 DYNALIB_DIR := services-dynalib
 
+# Updated dynamic library build target
 .PHONY: dynalib
 
 dynalib:
-	$(MAKE) -C $(DYNALIB_DIR)
+	$(MAKE) -C $(DYNALIB_DIR) CFLAGS="-O2 -DTHREAD_SAFE"
 
 all: dynalib
 	@echo "Dynamic library for services built successfully."

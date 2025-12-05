@@ -8,10 +8,10 @@
 #pragma once
 
 /**
- * @brief Example dynamic library function.
+ * @brief Optimized dynamic library function.
  *
- * This function demonstrates dynamic library support.
+ * This function has been refactored for improved performance.
  *
  * @return int Returns 0 on success, or an error code on failure.
  */
-int system_dynalib_function();
+int optimized_system_dynalib_function();
