@@ -69,4 +69,7 @@ all: dynalib
 # Add test_crypto.cpp to the test build process
 TEST_SOURCES += test/test_crypto.cpp
 
+# Add test_hal.cpp to the test build process
+TEST_SOURCES += test/test_hal.cpp
+
 .PHONY: all docs new_target

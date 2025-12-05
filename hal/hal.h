@@ -9,12 +9,16 @@
 
 /**
  * @brief Initializes the hardware abstraction layer.
+ *
+ * This function initializes hardware resources and logs any errors encountered during initialization.
  */
 void hal_init();
 
 /**
  * @brief Performs a hardware operation.
  *
- * @return int Returns 0 on success, or an error code on failure.
+ * This function performs a hardware operation and logs any errors encountered during execution.
+ *
+ * @return int Returns 0 on success, or -1 on failure.
  */
 int hal_perform_operation();

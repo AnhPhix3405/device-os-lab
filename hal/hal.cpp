@@ -6,12 +6,18 @@
  */
 
 #include "hal.h"
+#include <iostream>
 
 /**
  * @brief Example HAL function to initialize hardware.
  */
 void hal_init() {
-    // Initialize hardware resources here
+    try {
+        // Initialize hardware resources here
+        std::cout << "HAL initialized successfully." << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "HAL initialization failed: " << e.what() << std::endl;
+    }
 }
 
 /**
@@ -20,6 +26,12 @@ void hal_init() {
  * @return int Returns 0 on success, or an error code on failure.
  */
 int hal_perform_operation() {
-    // Perform hardware operation here
-    return 0;
+    try {
+        // Perform hardware operation here
+        std::cout << "Hardware operation performed successfully." << std::endl;
+        return 0;
+    } catch (const std::exception& e) {
+        std::cerr << "Hardware operation failed: " << e.what() << std::endl;
+        return -1;
+    }
 }
