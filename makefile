@@ -72,4 +72,8 @@ TEST_SOURCES += test/test_crypto.cpp
 # Add test_hal.cpp to the test build process
 TEST_SOURCES += test/test_hal.cpp
 
-.PHONY: all docs new_target
+# Include modularized makefiles
+include common.mk
+include subdirs.mk
+include build.mk
+include clean.mk
