@@ -1,4 +1,3 @@
-
 MODULE=hal
 HAL_MODULE_PATH=.
 
@@ -12,6 +11,9 @@ DEPENDENCIES = newlib_nano platform services dynalib bootloader wiring crypto pr
 include ../build/platform-id.mk
 -include $(HAL_MODULE_PATH)/src/$(PLATFORM_NAME)/tlm.mk
 
+# Ensure compatibility with newlib_nano
+CFLAGS += -DNEWLIB_NANO
+LDFLAGS += -specs=custom-nano.specs
 
 include ../build/arm-tlm.mk
 

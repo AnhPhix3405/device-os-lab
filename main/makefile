@@ -1,4 +1,3 @@
-
 MODULE=main
 MAIN_MODULE_PATH=.
 
@@ -103,5 +102,9 @@ TARGET=elf bin lst hex size
 endif
 
 include ../build/arm-tlm.mk
+
+# Ensure compatibility with newlib_nano
+CFLAGS += -DNEWLIB_NANO
+LDFLAGS += -specs=custom-nano.specs
 
 endif
