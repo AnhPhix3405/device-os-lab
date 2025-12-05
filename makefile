@@ -21,7 +21,7 @@ msg = Building firmware for $(PRODUCT_DESC), platform ID: $(PLATFORM_ID)$(msg_ex
 $(info $(msg))
 
 # Modularized makefile structure
-SUBDIRS := communication hal platform services wiring bootloader main
+SUBDIRS := communication communication-dynalib hal platform services wiring bootloader main
 
 # Added third-party libraries to the build process
 SUBDIRS += third_party/mbedtls third_party/nanopb third_party/lwip
