@@ -195,3 +195,10 @@ To ensure consistent code formatting, pre-commit hooks have been added. These ho
 1. Install the pre-commit hooks by running the setup script: `scripts/setup_hooks.sh`.
 2. Ensure all code adheres to the formatting rules defined in `.clang-format`.
 3. Verify that the hooks are functioning correctly by attempting a commit.
+
+## Code Formatting with clang-format
+
+To ensure consistent code style, use `clang-format`:
+
+1. Run `make clang-format` to format all source files.
+2. Verify formatting before committing changes.

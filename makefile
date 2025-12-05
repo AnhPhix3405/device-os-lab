@@ -80,3 +80,9 @@ include common.mk
 include subdirs.mk
 include build.mk
 include clean.mk
+
+# Add clang-format target
+.PHONY: clang-format
+clang-format:
+	@echo "Running clang-format..."
+	clang-format -i $(shell find . -name '*.cpp' -o -name '*.h')
