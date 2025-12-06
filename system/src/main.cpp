@@ -38,6 +38,16 @@
 #include "system_mode.h"
 #include "system_task.h"
 #include "system_network.h"
+#include "../reset.h"
+// ...existing code...
+
+int main() {
+    // ...existing code...
+    // Gọi reset hệ thống thử nghiệm
+    system_reset();
+    // ...existing code...
+    return 0;
+}
 #include "logging.h"
 // ...existing code...
 
