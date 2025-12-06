@@ -41,23 +41,28 @@ class SocketUsartBase : public Usart
 
         inline int32_t read_char(bool peek=false)
         {
-            if (rx.tail==rx.head)
+            // Bảo vệ buffer overflow khi đọc
+            if (rx.size == 0) return -1;
+            if (rx.tail == rx.head)
                 return -1;
 
             int32_t c = rx.buffer[rx.tail];
             if (!peek)
-                rx.tail = (rx.tail+1) % rx.size;
+                rx.tail = (rx.tail + 1) % rx.size;
             return c;
         }
 
         inline void write_char(unsigned char c)
         {
+            // Bảo vệ buffer overflow khi ghi
+            if (tx.size == 0) return;
             unsigned i = (unsigned int)(tx.head + 1) % tx.size;
             if (i != tx.tail)
             {
                 tx.buffer[tx.head] = c;
                 tx.head = i;
             }
+            // Nếu buffer đầy, có thể bỏ qua hoặc ghi đè, ở đây sẽ bỏ qua byte mới
         }
 
         void fillFromSocketIfNeeded() {

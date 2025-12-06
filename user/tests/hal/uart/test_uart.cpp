@@ -38,9 +38,22 @@ void setup() {
 void loop() {
     uint8_t data;
 
-    if (hal_usart_available(HAL_USART_SERIAL1))
-    {
+    // Test buffer overflow: ghi vượt quá kích thước buffer
+    for (int i = 0; i < SERIAL_BUFFER_SIZE + 10; ++i) {
+        hal_usart_write(HAL_USART_SERIAL1, (uint8_t)i);
+    }
+
+    // Đọc lại dữ liệu trong buffer
+    int count = 0;
+    while (hal_usart_available(HAL_USART_SERIAL1)) {
         data = hal_usart_read(HAL_USART_SERIAL1);
-        hal_usart_write(HAL_USART_SERIAL1, data);
+        count++;
+    }
+
+    // Kiểm tra số lượng dữ liệu đọc được không vượt quá SERIAL_BUFFER_SIZE
+    if (count > SERIAL_BUFFER_SIZE) {
+        // Báo lỗi nếu có overflow
+        // (Có thể thay bằng assert hoặc log tuỳ framework test)
+        Serial.println("Buffer overflow detected!");
     }
 }
