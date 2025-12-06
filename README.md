@@ -24,6 +24,11 @@ Device OS is the operating system for Particle devices. It provides a robust and
 
 ## New Features
 
+
+### Optimized AES Encryption
+- Improved performance of AES encryption and decryption algorithms.
+- Added test for AES correctness and performance.
+
 ### Power Consumption Logging
 - Logs battery levels and power consumption metrics.
 - Helps monitor and optimize energy usage.
