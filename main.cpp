@@ -2,9 +2,13 @@
 #include "services/services.h"
 #include "services/logger.h"
 #include "system.h"
+#include "bootloader.h"
+#include "module_data.h"
 #include <iostream>
 
 int main() {
+    bootloader_set_version(1, 2, 3); // Example version
+    print_firmware_version();
     set_log_level(LOG_DEBUG);
     set_log_format("%TIME% [%LEVEL%] %MSG%");
     log_info("System starting...");
