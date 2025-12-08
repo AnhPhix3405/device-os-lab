@@ -9,6 +9,9 @@
 
 #include <string>
 
+#include <stdint.h>
+#include <stddef.h>
+
 /**
  * @brief Encrypts the given plaintext using the specified key.
  *
@@ -19,6 +22,11 @@
  * @return std::string The encrypted text.
  */
 std::string encrypt(const std::string& plaintext, const std::string& key);
+
+// Encrypt buffer (memory optimized)
+void crypto_encrypt_buffer(const uint8_t* input, uint8_t* output, size_t length, const uint8_t* key, size_t key_len);
+// Decrypt buffer (memory optimized)
+void crypto_decrypt_buffer(const uint8_t* input, uint8_t* output, size_t length, const uint8_t* key, size_t key_len);
 
 /**
  * @brief Decrypts the given ciphertext using the specified key.
