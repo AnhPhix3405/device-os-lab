@@ -21,6 +21,9 @@ int main() {
         logInfo("Network connectivity: FAILED");
     }
 
+    // Gọi reset hệ thống thử nghiệm
+    system_reset();
+
     // ...existing code...
 
     logInfo("System initialization completed.");
