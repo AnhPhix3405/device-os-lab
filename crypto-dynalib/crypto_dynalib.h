@@ -5,24 +5,19 @@
  * This file contains the declarations of dynamic library support for cryptographic algorithms.
  */
 
-#pragma once
+#ifndef CRYPTO_DYNALIB_H
+#define CRYPTO_DYNALIB_H
 
-#include <string>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/**
- * @brief Encrypts the given plaintext using the specified key (dynamic library).
- *
- * @param plaintext The input text to encrypt.
- * @param key The encryption key.
- * @return std::string The encrypted text.
- */
-std::string dynalib_encrypt(const std::string& plaintext, const std::string& key);
+// Exported dynalib crypto functions
+const char* dynalib_encrypt(const char* plaintext, const char* key);
+const char* dynalib_decrypt(const char* ciphertext, const char* key);
 
-/**
- * @brief Decrypts the given ciphertext using the specified key (dynamic library).
- *
- * @param ciphertext The input text to decrypt.
- * @param key The decryption key.
- * @return std::string The decrypted text.
- */
-std::string dynalib_decrypt(const std::string& ciphertext, const std::string& key);
+#ifdef __cplusplus
+}
+#endif
+
+#endif // CRYPTO_DYNALIB_H
