@@ -19,7 +19,6 @@
 
 #include "protocol.h"
 #include "util/coap_message.h"
-
 #include <catch2/catch.hpp>
 #include "fakeit.hpp"
 using namespace fakeit;
@@ -74,7 +73,7 @@ size_t encodeEvent(uint8_t* buf, size_t buf_size, uint16_t msg_id, const char *e
 		m.payload(data, data_size);
 	}
 	auto s = m.encode();
-	std::memcpy(buf, s.data(), std::min(s.size(), buf_size));
+	safe_buffer_copy(reinterpret_cast<char*>(buf), buf_size, reinterpret_cast<const char*>(s.data()), s.size());
 	return s.size();
 }
 

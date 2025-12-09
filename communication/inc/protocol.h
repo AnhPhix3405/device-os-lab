@@ -652,3 +652,8 @@ public:
 
 }
 }
+
+/**
+ * Safely copy data to a buffer to prevent overflow.
+ */
+void safe_buffer_copy(char* dest, size_t dest_size, const char* src, size_t src_size);
