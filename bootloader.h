@@ -5,10 +5,12 @@
 extern "C" {
 #endif
 
+#include <stdalign.h>
+
 typedef struct {
-    int major;
-    int minor;
-    int patch;
+    alignas(4) int major;
+    alignas(4) int minor;
+    alignas(4) int patch;
 } FirmwareVersion;
 
 void bootloader_set_version(int major, int minor, int patch);

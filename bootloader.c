@@ -1,8 +1,9 @@
 #include "bootloader.h"
 #include "system.h"
 #include <stdio.h>
+#include <stdalign.h>
 
-static FirmwareVersion current_fw_version = {1, 0, 0};
+static alignas(4) FirmwareVersion current_fw_version = {1, 0, 0};
 
 void bootloader_set_version(int major, int minor, int patch) {
     current_fw_version.major = major;
