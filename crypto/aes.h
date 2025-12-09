@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+// AES block size in bytes
 const size_t AES_BLOCK_SIZE = 16;
 
 // Memory-optimized AES (no heap allocation)
