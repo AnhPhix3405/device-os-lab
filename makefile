@@ -6,6 +6,9 @@ PROJECT_ROOT = .
 COMMON_BUILD=build
 BUILD_PATH_BASE=$(COMMON_BUILD)/target
 
+# Include common.mk for shared flags
+include $(COMMON_BUILD)/common.mk
+
 ifdef SPARK_PRODUCT_ID
 PRODUCT_ID=$(SPARK_PRODUCT_ID)
 endif
