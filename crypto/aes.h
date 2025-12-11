@@ -7,6 +7,7 @@
 const size_t AES_BLOCK_SIZE = 16;
 
 // Memory-optimized AES (no heap allocation)
+// Encrypts 'length' bytes from 'input' to 'output' using 'key' of length 'key_len'.
 void aes_encrypt(const uint8_t* input, uint8_t* output, size_t length, const uint8_t* key, size_t key_len);
 void aes_decrypt(const uint8_t* input, uint8_t* output, size_t length, const uint8_t* key, size_t key_len);
 
