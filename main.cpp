@@ -9,7 +9,7 @@
 int main() {
     HAL_Status status = HAL_SUCCESS;
 
-    bootloader_fast_init(); // Use fast initialization for reduced startup time
+    bootloader_initialize(); // Use the refactored initialization logic
     print_firmware_version();
     set_log_level(LOG_DEBUG);
     set_log_format("%TIME% [%LEVEL%] %MSG%");
