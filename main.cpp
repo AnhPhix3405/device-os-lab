@@ -11,6 +11,19 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <functional>
+
+void execute_with_watchdog(const std::function<void()>& task) {
+    try {
+        watchdog_start(5000);
+        task();
+        watchdog_stop();
+    } catch (const std::exception& e) {
+        log_error(std::string("Task failed: ") + e.what());
+        watchdog_stop();
+        throw;
+    }
+}
 
 int main() {
     HAL_Status status = HAL_SUCCESS;
@@ -21,14 +34,13 @@ int main() {
     set_log_format("%TIME% [%LEVEL%] %MSG%");
     log_info("System starting...");
 
-    // Start the watchdog timer with a 5000ms timeout
-    watchdog_start(5000);
-
-    Protocol protocol;
-    protocol.initialize();
-    protocol.send("Hello, Protocol!");
-    std::string response = protocol.receive();
-    log_info("Protocol response: " + response);
+    execute_with_watchdog([]() {
+        Protocol protocol;
+        protocol.initialize();
+        protocol.send("Hello, Protocol!");
+        std::string response = protocol.receive();
+        log_info("Protocol response: " + response);
+    });
 
     try {
         void* lib = dynalib_load("example_library");
@@ -48,33 +60,10 @@ int main() {
 
     DeviceConfig config;
     if (!config.load("device.cfg")) {
-        log_warn("No config found, creating default.");
-        config.set("device_id", "12345");
-        config.set("mode", "default");
-        config.save("device.cfg");
-    }
-    log_debug("Device ID: " + config.get("device_id"));
-    log_debug("Mode: " + config.get("mode"));
-    Service::initialize();
-
-    // Add system health monitoring
-    if (!system_health_check()) {
-        log_error("System health check failed.");
+        log_error("Failed to load device configuration.");
         return -1;
     }
 
-    Service::execute();
-    system_kick_watchdog();
-    log_info("System finished.");
-
-    // Simulate application logic
-    for (int i = 0; i < 10; ++i) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        watchdog_kick(); // Reset the watchdog timer
-    }
-
-    // Stop the watchdog timer before exiting
-    watchdog_stop();
-
+    log_info("System initialized successfully.");
     return 0;
 }
