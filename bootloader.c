@@ -1,5 +1,6 @@
 #include "bootloader.h"
 #include "system.h"
+#include "crypto.h"
 #include <stdio.h>
 #include <stdalign.h>
 
@@ -24,8 +25,23 @@ void bootloader_fast_init(void) {
     bootloader_set_version(1, 0, 0);
 }
 
+void bootloader_secure_boot(void) {
+    const char* boot_key = "secure_boot_key";
+    const char* boot_signature = "boot_signature";
+
+    if (!crypto_verify_signature(boot_key, boot_signature)) {
+        printf("Secure boot failed: Invalid signature\n");
+        while (1) {
+            // Halt the system
+        }
+    }
+
+    printf("Secure boot passed\n");
+}
+
 void bootloader_init(void) {
     system_init();
+    bootloader_secure_boot();
     bootloader_fast_init();
     bootloader_print_version();
 }

@@ -4,6 +4,7 @@
 #include "hal/hal_platform.h"
 #include "logging.h"
 #include "bootloader.h"
+#include "crypto.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,6 +13,7 @@ extern "C" {
 void system_init(void);
 void system_kick_watchdog(void);
 void system_stop_watchdog(void);
+void system_secure_boot(void);
 
 // System health monitoring
 bool system_health_check(void);
