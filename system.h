@@ -2,6 +2,7 @@
 #define SYSTEM_H
 
 #include "hal/hal_platform.h"
+#include "logging.h"
 
 #ifdef __cplusplus
 extern "C" {

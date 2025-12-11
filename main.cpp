@@ -4,6 +4,7 @@
 #include "system.h"
 #include "bootloader.h"
 #include "module_data.h"
+#include "logging.h"
 #include <iostream>
 
 int main() {
