@@ -8,7 +8,9 @@
 #include "crypto.h"
 #include <iostream>
 #include <string>
+#include <mutex>
 
+std::mutex crypto_mutex;
 
 extern "C" {
 #include "aes.c"
@@ -22,6 +24,7 @@ extern "C" {
  * @return std::string The encrypted text.
  */
 std::string encrypt(const std::string& plaintext, const std::string& key) {
+    std::lock_guard<std::mutex> lock(crypto_mutex);
     // Using optimized AES from aes.c
     return ::encrypt(plaintext, key);
 }
@@ -34,6 +37,7 @@ std::string encrypt(const std::string& plaintext, const std::string& key) {
  * @return std::string The decrypted text.
  */
 std::string decrypt(const std::string& ciphertext, const std::string& key) {
+    std::lock_guard<std::mutex> lock(crypto_mutex);
     // Using optimized AES from aes.c
     return ::decrypt(ciphertext, key);
 }
