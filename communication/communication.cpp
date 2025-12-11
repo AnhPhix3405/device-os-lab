@@ -8,6 +8,7 @@
 #include "communication.h"
 #include <iostream>
 #include <cstring>
+#include <algorithm> // For std::min
 
 const size_t MAX_BUFFER_SIZE = 1024;
 
@@ -32,12 +33,12 @@ int communication_send(const char* data, size_t length) {
     }
 
     if (length > MAX_BUFFER_SIZE) {
-        std::cerr << "Error: Data length exceeds maximum buffer size." << std::endl;
-        return -1;
+        std::cerr << "Warning: Data length exceeds maximum buffer size. Truncating data." << std::endl;
+        length = std::min(length, MAX_BUFFER_SIZE);
     }
 
     // Simulate sending data
-    char buffer[MAX_BUFFER_SIZE];
+    char buffer[MAX_BUFFER_SIZE] = {0};
     std::memcpy(buffer, data, length);
     std::cout << "Sending data: " << std::string(buffer, length) << std::endl;
 
