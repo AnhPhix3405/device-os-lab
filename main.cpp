@@ -7,7 +7,10 @@
 #include "logging.h"
 #include "dynalib.h"
 #include "communication/protocol.h"
+#include "hal/watchdog.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 int main() {
     HAL_Status status = HAL_SUCCESS;
@@ -17,6 +20,9 @@ int main() {
     set_log_level(LOG_DEBUG);
     set_log_format("%TIME% [%LEVEL%] %MSG%");
     log_info("System starting...");
+
+    // Start the watchdog timer with a 5000ms timeout
+    watchdog_start(5000);
 
     Protocol protocol;
     protocol.initialize();
@@ -60,5 +66,15 @@ int main() {
     Service::execute();
     system_kick_watchdog();
     log_info("System finished.");
+
+    // Simulate application logic
+    for (int i = 0; i < 10; ++i) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        watchdog_kick(); // Reset the watchdog timer
+    }
+
+    // Stop the watchdog timer before exiting
+    watchdog_stop();
+
     return 0;
 }
