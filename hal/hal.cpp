@@ -7,6 +7,7 @@
 
 #include "hal.h"
 #include <iostream>
+#include <stdexcept>
 
 /**
  * @brief Example HAL function to initialize hardware.
@@ -17,6 +18,7 @@ void hal_init() {
         std::cout << "HAL initialized successfully." << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "HAL initialization failed: " << e.what() << std::endl;
+        throw;
     }
 }
 
