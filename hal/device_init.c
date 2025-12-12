@@ -1,6 +1,7 @@
 #include "device_init.h"
 #include "spi.h"
 #include "adc.h"
+#include "watchdog.h"
 #include <stdio.h>
 
 void hal_device_init() {
@@ -10,5 +11,7 @@ void hal_device_init() {
     spi_enable_dma();
     adc_init();
     adc_calibrate();
+    watchdog_init(5000); // Initialize watchdog with 5-second timeout
+    watchdog_start();
     // TODO: Thêm logic khởi tạo thực tế
 }
