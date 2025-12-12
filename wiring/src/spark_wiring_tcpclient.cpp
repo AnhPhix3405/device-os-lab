@@ -161,6 +161,10 @@ int TCPClient::available()
     {
         flush_buffer();
     }
+    // Validate offset consistency
+    if (d_->offset > d_->total) {
+        d_->offset = d_->total;
+    }
 
     if(Network.from(nif_).ready() && isOpen(d_->sock))
     {
