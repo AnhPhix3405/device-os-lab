@@ -16,10 +16,10 @@
 void communication_init();
 
 /**
- * @brief Sends data using the new communication protocol.
+ * @brief Sends data using the new communication protocol with retry logic.
  *
  * This function validates the input data, ensures it does not exceed the maximum buffer size,
- * and logs the operation.
+ * and retries sending the data up to a maximum retry count if the operation fails.
  *
  * @param data The data to send (must not be null).
  * @param length The length of the data (must be greater than 0 and less than MAX_BUFFER_SIZE).
