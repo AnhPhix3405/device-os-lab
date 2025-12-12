@@ -43,7 +43,10 @@ ProtocolError CoAPMessageStore::send_message(CoAPMessage* msg, Channel& channel)
 	if (!msg) {
 		return INVALID_MESSAGE;
 	}
-	Message m((uint8_t*)msg->get_data(), msg->get_data_length(), msg->get_data_length());
+        if (!msg->get_data() || msg->get_data_length() == 0) {
+            return INVALID_MESSAGE;
+        }
+        Message m((uint8_t*)msg->get_data(), msg->get_data_length(), msg->get_data_length());
 	m.decode_id();
 	return channel.send(m);
 }

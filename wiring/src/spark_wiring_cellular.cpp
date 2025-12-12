@@ -130,6 +130,9 @@ namespace spark {
         if (cellular_band_select_get(&band_hal, NULL) != 0) {
             return (band_get.ok = false); // band_hal object was not updated
         }
+        if (band_hal.count > arraySize(band_get.band)) {
+            return (band_get.ok = false);
+        }
         band_get.count = band_hal.count;
         memcpy(band_get.band, &band_hal.band, sizeof(band_get.band));
         return (band_get.ok = true);
@@ -139,6 +142,9 @@ namespace spark {
         MDM_BandSelect band_hal;
         if (cellular_band_available_get(&band_hal, NULL) != 0) {
             return (band_get.ok = false); // band_hal object was not updated
+        }
+        if (band_hal.count > arraySize(band_get.band)) {
+            return (band_get.ok = false);
         }
         band_get.count = band_hal.count;
         memcpy(band_get.band, &band_hal.band, sizeof(band_get.band));

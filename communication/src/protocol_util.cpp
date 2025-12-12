@@ -30,6 +30,9 @@ namespace particle {
 namespace protocol {
 
 int formatDiagnosticPayload(char* buf, size_t size, int error) {
+    if (!buf || size == 0) {
+        return 0;
+    }
     spark::JSONBufferWriter w(buf, size);
     w.beginObject();
     w.name("code").value(error);

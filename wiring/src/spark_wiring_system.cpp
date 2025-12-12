@@ -54,6 +54,9 @@ void SystemClass::reset(uint32_t data, SystemResetFlags flags)
     {
         LOG(WARN, "Reset data contains reserved value, proceeding anyway");
     }
+    if (data > 0xFFFFFF) {  // Upper 8 bits reserved for system use
+        data &= 0xFFFFFF;
+    }
     system_reset(SYSTEM_RESET_MODE_NORMAL, RESET_REASON_USER, data, flags.value(), nullptr);
 }
 
@@ -77,12 +80,18 @@ SystemSleepResult SystemClass::sleep(const particle::SystemSleepConfiguration& c
 
 SleepResult SystemClass::sleep(Spark_Sleep_TypeDef sleepMode, long seconds, SleepOptionFlags flags)
 {
+    if (seconds < 0) {
+        seconds = 0;
+    }
     int ret = system_sleep(sleepMode, seconds, flags.value(), NULL);
     System.systemSleepResult_ = SystemSleepResult(SleepResult(WAKEUP_REASON_NONE, static_cast<system_error_t>(ret)));
     return System.systemSleepResult_;
 }
 
 SleepResult SystemClass::sleepPinImpl(const uint16_t* pins, size_t pins_count, const InterruptMode* modes, size_t modes_count, long seconds, SleepOptionFlags flags) {
+    if (!pins || pins_count == 0 || !modes) {
+        return SleepResult(WAKEUP_REASON_NONE, SYSTEM_ERROR_INVALID_ARGUMENT);
+    }
     int ret = system_sleep_pins(pins, pins_count, modes, modes_count, seconds, flags.value(), nullptr);
     System.systemSleepResult_ = SystemSleepResult(SleepResult(ret, pins, pins_count));
     return System.systemSleepResult_;
@@ -93,7 +102,9 @@ uint32_t SystemClass::freeMemory()
     runtime_info_t info;
     memset(&info, 0, sizeof(info));
     info.size = sizeof(info);
-    HAL_Core_Runtime_Info(&info, NULL);
+    if (HAL_Core_Runtime_Info(&info, NULL) != 0) {
+        return 0;
+    }
     return info.freeheap;
 }
 
@@ -110,6 +121,9 @@ spark::Vector<ApplicationAsset> SystemClass::assetsRequired() {
     spark::Vector<ApplicationAsset> assets;
     asset_manager_info info = {};
     info.size = sizeof(info);
+    if (info.size == 0) {
+        return assets;
+    }
     int r = asset_manager_get_info(&info, nullptr);
     if (r) {
         return assets;
@@ -128,6 +142,9 @@ spark::Vector<ApplicationAsset> SystemClass::assetsAvailable() {
     spark::Vector<ApplicationAsset> assets;
     asset_manager_info info = {};
     info.size = sizeof(info);
+    if (info.size == 0) {
+        return assets;
+    }
     int r = asset_manager_get_info(&info, nullptr);
     if (r) {
         return assets;
@@ -135,6 +152,9 @@ spark::Vector<ApplicationAsset> SystemClass::assetsAvailable() {
     SCOPE_GUARD({
         asset_manager_free_info(&info, nullptr);
     });
+    if (info.available_count > 256) {  // Safety limit
+        return assets;
+    }
     for (size_t i = 0; i < info.available_count; i++) {
         asset_manager_asset* a = (asset_manager_asset*)(((uint8_t*)info.available) + info.asset_size * i);
         assets.append(ApplicationAsset(a));
