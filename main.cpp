@@ -54,6 +54,13 @@ int main() {
     print_firmware_version();
     log_info("System starting...");
 
+    if (!system_health_check()) {
+        log_error("System health check failed. Aborting startup.");
+        return -1;
+    }
+
+    log_info("System health check passed.");
+
     auto protocol_task = std::async(std::launch::async, []() {
         Protocol protocol;
         protocol.initialize();

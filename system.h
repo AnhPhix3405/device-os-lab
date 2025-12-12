@@ -18,6 +18,7 @@ void system_secure_boot(void);
 
 // System health monitoring
 bool system_health_check(void);
+void log_system_health(void);
 void execute_with_watchdog(const std::function<void()>& task);
 
 #ifdef __cplusplus
