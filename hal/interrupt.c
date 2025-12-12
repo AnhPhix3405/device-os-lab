@@ -20,7 +20,6 @@ void hal_disable_interrupt() {
     printf("Interrupt disabled\n");
 }
 
-// Hàm mô phỏng xảy ra ngắt
 void hal_trigger_interrupt() {
     if (interrupt_enabled && interrupt_handler) {
         interrupt_handler();
