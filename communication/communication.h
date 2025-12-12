@@ -9,6 +9,7 @@
 
 #include <cstddef>
 #include "message_queue.h"
+#include "at_command_parser.h"
 
 /**
  * @brief Initializes the communication module.
@@ -42,3 +43,11 @@ bool communication_queue_push(const char* message);
  * @return true if a message was successfully popped, false otherwise.
  */
 bool communication_queue_pop(char* buffer);
+
+/**
+ * @brief Processes a single character for AT command parsing.
+ *
+ * @param c The character to process.
+ * @return true if a complete command was parsed, false otherwise.
+ */
+bool communication_process_at_char(char c);
