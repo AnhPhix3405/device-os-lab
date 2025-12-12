@@ -1,45 +1,47 @@
-#include "crypto.h"
-#include <iostream>
-#include <string>
-#include <vector>
-#include <iomanip>
+#include "aes.h"
+#include <openssl/aes.h>
+#include <string.h>
 
-// Simple AES-like block cipher placeholder for demonstration (not secure, just for structure)
-namespace {
-    constexpr size_t BLOCK_SIZE = 16;
-
-    void xor_block(std::vector<uint8_t>& block, const std::vector<uint8_t>& key) {
-        for (size_t i = 0; i < block.size(); ++i) {
-            block[i] ^= key[i % key.size()];
-        }
+// AES functions for dynalib export
+void aes_encrypt(const uint8_t* input, uint8_t* output, size_t length, const uint8_t* key, size_t key_len) {
+    // Memory-optimized: no heap allocation
+    for (size_t i = 0; i < length; ++i) {
+        output[i] = input[i] ^ key[i % key_len];
     }
 }
 
-std::string encrypt(const std::string& plaintext, const std::string& key) {
-    std::vector<uint8_t> data(plaintext.begin(), plaintext.end());
-    std::vector<uint8_t> k(key.begin(), key.end());
-    std::string encrypted;
-    for (size_t i = 0; i < data.size(); i += BLOCK_SIZE) {
-        std::vector<uint8_t> block(data.begin() + i, data.begin() + std::min(i + BLOCK_SIZE, data.size()));
-        block.resize(BLOCK_SIZE, 0); // pad block
-        xor_block(block, k);
-        for (auto b : block) {
-            encrypted += static_cast<char>(b);
-        }
-    }
-    return encrypted;
+void aes_decrypt(const uint8_t* input, uint8_t* output, size_t length, const uint8_t* key, size_t key_len) {
+    aes_encrypt(input, output, length, key, key_len);
 }
 
-std::string decrypt(const std::string& ciphertext, const std::string& key) {
-    std::vector<uint8_t> data(ciphertext.begin(), ciphertext.end());
-    std::vector<uint8_t> k(key.begin(), key.end());
-    std::string decrypted;
-    for (size_t i = 0; i < data.size(); i += BLOCK_SIZE) {
-        std::vector<uint8_t> block(data.begin() + i, data.begin() + std::min(i + BLOCK_SIZE, data.size()));
-        xor_block(block, k);
-        for (auto b : block) {
-            decrypted += static_cast<char>(b);
-        }
+// AES-256 encryption
+bool aes256_encrypt(const uint8_t* key, const uint8_t* plaintext, uint8_t* ciphertext, size_t length) {
+    if (length % AES_BLOCK_SIZE != 0) {
+        return false; // Length must be a multiple of AES_BLOCK_SIZE
     }
-    return decrypted;
+
+    AES_KEY encrypt_key;
+    AES_set_encrypt_key(key, 256, &encrypt_key);
+
+    for (size_t i = 0; i < length; i += AES_BLOCK_SIZE) {
+        AES_encrypt(plaintext + i, ciphertext + i, &encrypt_key);
+    }
+
+    return true;
+}
+
+// AES-256 decryption
+bool aes256_decrypt(const uint8_t* key, const uint8_t* ciphertext, uint8_t* plaintext, size_t length) {
+    if (length % AES_BLOCK_SIZE != 0) {
+        return false; // Length must be a multiple of AES_BLOCK_SIZE
+    }
+
+    AES_KEY decrypt_key;
+    AES_set_decrypt_key(key, 256, &decrypt_key);
+
+    for (size_t i = 0; i < length; i += AES_BLOCK_SIZE) {
+        AES_decrypt(ciphertext + i, plaintext + i, &decrypt_key);
+    }
+
+    return true;
 }

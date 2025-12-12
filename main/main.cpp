@@ -12,6 +12,7 @@ int main() {
 
     // Khởi tạo thiết bị
     device_init();
+    hal_device_init();
 
     // Kiểm tra kết nối mạng
     if (check_network_connectivity()) {
@@ -19,6 +20,9 @@ int main() {
     } else {
         logInfo("Network connectivity: FAILED");
     }
+
+    // Gọi reset hệ thống thử nghiệm
+    system_reset();
 
     // ...existing code...
 

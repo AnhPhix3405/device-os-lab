@@ -6,6 +6,9 @@ PROJECT_ROOT = .
 COMMON_BUILD=build
 BUILD_PATH_BASE=$(COMMON_BUILD)/target
 
+# Include common.mk for shared flags
+include $(COMMON_BUILD)/common.mk
+
 ifdef SPARK_PRODUCT_ID
 PRODUCT_ID=$(SPARK_PRODUCT_ID)
 endif
@@ -45,6 +48,12 @@ clean:
 docs:
 	@echo "Generating documentation..."
 	doxygen Doxyfile
+
+# Cross-compilation support
+CROSS_COMPILE ?= arm-none-eabi-
+CC := $(CROSS_COMPILE)gcc
+CXX := $(CROSS_COMPILE)g++
+LD := $(CROSS_COMPILE)ld
 
 include $(COMMON_BUILD)/common-tools.mk
 include $(COMMON_BUILD)/recurse.mk

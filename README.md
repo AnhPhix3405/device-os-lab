@@ -591,3 +591,44 @@ To build the project, follow these steps:
      ```
 
 For more detailed instructions, refer to the documentation in the `docs/` folder.
+
+# Module Data
+
+The `module_data` module provides functionality for managing module-specific data, including:
+
+- **Firmware Version Management**: Functions to validate, retrieve, and print firmware versions.
+- **Module Data Loading**: A utility to load module data from a file into a structured format.
+- **System Health Check**: A placeholder function for performing basic system diagnostics.
+
+## Key Functions
+
+### `validate_firmware_version`
+Validates the firmware version to ensure all components (major, minor, patch) are non-negative.
+
+### `get_firmware_version_string`
+Retrieves the firmware version as a human-readable string.
+
+### `print_firmware_version`
+Prints the firmware version to the console for debugging or informational purposes.
+
+### `load_module_data`
+Loads module data from a specified file and populates a `ModuleData` structure. Handles file opening, reading, and error reporting.
+
+### `system_health_check`
+Performs a basic health check of the system and logs the result. This is a placeholder for more comprehensive diagnostics.
+
+## Example Usage
+
+```cpp
+#include "module_data.h"
+
+ModuleData data;
+if (load_module_data("module_data.txt", data)) {
+    std::cout << "Module ID: " << data.id << std::endl;
+    std::cout << "Module Name: " << data.name << std::endl;
+} else {
+    std::cerr << "Failed to load module data." << std::endl;
+}
+
+print_firmware_version();
+```

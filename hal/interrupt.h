@@ -9,4 +9,9 @@ void hal_enable_interrupt();
 // Vô hiệu hóa ngắt
 void hal_disable_interrupt();
 
+// Xóa cờ ngắt
+void hal_clear_interrupt_flag();
+// Kiểm tra cờ ngắt
+int hal_interrupt_flag();
+
 #endif // HAL_INTERRUPT_H

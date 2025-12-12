@@ -8,7 +8,10 @@
 #include "crypto.h"
 #include <iostream>
 #include <string>
+#include <mutex>
+#include <cstring>
 
+std::mutex crypto_mutex;
 
 extern "C" {
 #include "aes.c"
@@ -22,6 +25,7 @@ extern "C" {
  * @return std::string The encrypted text.
  */
 std::string encrypt(const std::string& plaintext, const std::string& key) {
+    std::lock_guard<std::mutex> lock(crypto_mutex);
     // Using optimized AES from aes.c
     return ::encrypt(plaintext, key);
 }
@@ -34,8 +38,17 @@ std::string encrypt(const std::string& plaintext, const std::string& key) {
  * @return std::string The decrypted text.
  */
 std::string decrypt(const std::string& ciphertext, const std::string& key) {
+    std::lock_guard<std::mutex> lock(crypto_mutex);
     // Using optimized AES from aes.c
     return ::decrypt(ciphertext, key);
+}
+
+bool crypto_verify_signature(const char* key, const char* signature) {
+    // Simulate signature verification
+    if (std::strcmp(key, "secure_boot_key") == 0 && std::strcmp(signature, "boot_signature") == 0) {
+        return true;
+    }
+    return false;
 }
 
 

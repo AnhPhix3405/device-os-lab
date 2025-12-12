@@ -25,6 +25,13 @@ the very start of the module. In this case the first 4 byte address is the first
 in the module info structure, which is the start location of the module in Flash
 (0x08xxxxxx) where the module resides/should reside.
 
+
+## Updated module_info structure
+
+Trường mới:
+- build_timestamp: thời gian build
+- flags: cờ trạng thái
+
 Once the location of the module_info structure has been determinted, the address
 can be cast and assigned to a `const module_info_t*`
 
