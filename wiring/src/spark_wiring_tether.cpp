@@ -48,6 +48,10 @@ unsigned TetherSerialConfig::config() const {
 }
 
 TetherSerialConfig& TetherSerialConfig::baudrate(unsigned baud) {
+    // Validate baudrate is within reasonable UART range
+    if (baud < 1200 || baud > 115200) {
+        baud = HAL_PLATFORM_PPP_SERVER_USART_BAUDRATE;
+    }
     baudrate_ = baud;
     return *this;
 }
