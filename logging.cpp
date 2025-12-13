@@ -2,15 +2,21 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <iomanip>
+#include <sstream>
 
 static LogLevel currentLogLevel = LOG_INFO;
 static std::string logFormat = "%TIME% [%LEVEL%] %MSG%";
+static std::string timestampFormat = "%Y-%m-%d %H:%M:%S";
 
 std::string get_current_time() {
-    std::time_t now = std::time(nullptr);
-    char buf[100];
-    std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
-    return std::string(buf);
+    auto now = std::chrono::system_clock::now();
+    auto time_t_now = std::chrono::system_clock::to_time_t(now);
+    auto local_time = *std::localtime(&time_t_now);
+
+    std::ostringstream oss;
+    oss << std::put_time(&local_time, timestampFormat.c_str());
+    return oss.str();
 }
 
 std::string log_level_to_string(LogLevel level) {
@@ -29,6 +35,10 @@ void set_log_level(LogLevel level) {
 
 void set_log_format(const std::string& format) {
     logFormat = format;
+}
+
+void set_log_timestamp_format(const std::string& format) {
+    timestampFormat = format;
 }
 
 void log_message(LogLevel level, const std::string& message) {

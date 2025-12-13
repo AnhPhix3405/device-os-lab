@@ -2,6 +2,7 @@
 #define LOGGING_H
 
 #include <string>
+#include <chrono>
 
 enum LogLevel {
     LOG_DEBUG,
@@ -16,5 +17,6 @@ void log_debug(const std::string& message);
 void log_info(const std::string& message);
 void log_warn(const std::string& message);
 void log_error(const std::string& message);
+void set_log_timestamp_format(const std::string& format);
 
 #endif // LOGGING_H
