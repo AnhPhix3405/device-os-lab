@@ -132,8 +132,7 @@ void log_message(int level, const char *category, LogAttributes *attr, void *res
 }
 
 void log_write(int level, const char *category, const char *data, size_t size, void *reserved) {
-    if (!data || !size)
-    {
+    if (!data || !size || level < LOG_LEVEL_ALL || level > LOG_LEVEL_PANIC) {
         return;
     }
     const log_write_callback_type write_callback = log_write_callback;
