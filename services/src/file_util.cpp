@@ -50,6 +50,10 @@ void dumpLine(const char* data, size_t size, size_t offs) {
     if (!data || size == 0) {
         return;
     }
+    // Validate offset to prevent format overflow
+    if (offs > 0xFFFFFFFF) {
+        return;
+    }
     if (size > DUMP_BYTES_PER_LINE) {
         size = DUMP_BYTES_PER_LINE;
     }
