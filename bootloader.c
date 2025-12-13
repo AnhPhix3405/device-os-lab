@@ -4,9 +4,15 @@
 #include "logging.h"
 #include <stdio.h>
 #include <stdalign.h>
+#include <stdlib.h>
+#include <string.h>
 
 static alignas(4) FirmwareVersion current_fw_version = {1, 0, 0};
 static int bootloader_initialized = 0;
+
+static void* memory_pool = NULL;
+static size_t memory_pool_size = 0;
+static size_t memory_pool_used = 0;
 
 const char* bootloader_error_string(int error_code) {
     switch (error_code) {
@@ -143,4 +149,44 @@ int bootloader_init(void) {
     log_info("Bootloader initialization completed successfully");
     
     return BOOTLOADER_OK;
+}
+
+int bootloader_memory_pool_init(size_t pool_size) {
+    if (memory_pool != NULL) {
+        log_warn("Memory pool already initialized.");
+        return BOOTLOADER_OK;
+    }
+
+    memory_pool = malloc(pool_size);
+    if (memory_pool == NULL) {
+        log_error("Failed to allocate memory pool.");
+        return BOOTLOADER_ERROR_MEMORY;
+    }
+
+    memory_pool_size = pool_size;
+    memory_pool_used = 0;
+    log_info("Memory pool initialized successfully.");
+    return BOOTLOADER_OK;
+}
+
+void* bootloader_memory_alloc(size_t size) {
+    if (memory_pool == NULL) {
+        log_error("Memory pool not initialized.");
+        return NULL;
+    }
+
+    if (memory_pool_used + size > memory_pool_size) {
+        log_error("Memory pool exhausted.");
+        return NULL;
+    }
+
+    void* ptr = (char*)memory_pool + memory_pool_used;
+    memory_pool_used += size;
+    log_info("Memory allocated from pool.");
+    return ptr;
+}
+
+void bootloader_memory_free(void* ptr) {
+    // Simplified memory pool does not support freeing individual blocks.
+    log_warn("Memory pool does not support freeing individual blocks.");
 }
