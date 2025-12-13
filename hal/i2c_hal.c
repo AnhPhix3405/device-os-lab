@@ -2,10 +2,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 #define I2C_TIMEOUT_MS 1000
 
 static uint32_t i2c_start_time = 0;
+static uint32_t current_clock_speed = 0;
 
 // I2C multi-master arbitration handling
 bool i2c_handle_arbitration_loss(void) {
@@ -36,4 +38,40 @@ void i2c_start_operation() {
     printf("I2C operation started.\n");
 }
 
-// ...existing code...
+bool i2c_init(uint32_t clock_speed) {
+    current_clock_speed = clock_speed;
+    printf("I2C initialized with clock speed: %u Hz\n", clock_speed);
+    return true;
+}
+
+size_t i2c_send(uint8_t address, const uint8_t* data, size_t length) {
+    if (data == NULL || length == 0) {
+        printf("Error: Invalid data or length.\n");
+        return 0;
+    }
+
+    printf("I2C sending data to address 0x%02X: ", address);
+    for (size_t i = 0; i < length; ++i) {
+        printf("%02X ", data[i]);
+    }
+    printf("\n");
+
+    return length;
+}
+
+size_t i2c_receive(uint8_t address, uint8_t* buffer, size_t length) {
+    if (buffer == NULL || length == 0) {
+        printf("Error: Invalid buffer or length.\n");
+        return 0;
+    }
+
+    // Simulate receiving data
+    memset(buffer, 0xCD, length);
+    printf("I2C received data from address 0x%02X: ", address);
+    for (size_t i = 0; i < length; ++i) {
+        printf("%02X ", buffer[i]);
+    }
+    printf("\n");
+
+    return length;
+}
