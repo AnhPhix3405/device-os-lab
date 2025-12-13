@@ -46,6 +46,10 @@ ProtocolError CoAPMessageStore::send_message(CoAPMessage* msg, Channel& channel)
         if (!msg->get_data() || msg->get_data_length() == 0) {
             return INVALID_MESSAGE;
         }
+        // Validate message ID is within valid CoAP range (0-65535)
+        if (msg->get_id() > 0xFFFF) {
+            return INVALID_MESSAGE;
+        }
         Message m((uint8_t*)msg->get_data(), msg->get_data_length(), msg->get_data_length());
 	m.decode_id();
 	return channel.send(m);
