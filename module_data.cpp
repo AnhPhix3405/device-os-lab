@@ -140,3 +140,24 @@ std::string get_module_version_string() {
 void print_module_version() {
     std::cout << "Module Version: " << get_module_version_string() << std::endl;
 }
+
+/**
+ * @brief Validates the module data.
+ *
+ * This function checks if the module data is valid by ensuring
+ * that the module ID is non-negative and the name is not empty.
+ *
+ * @param data The module data to validate.
+ * @return true if the data is valid, false otherwise.
+ */
+bool validate_module_data(const ModuleData& data) {
+    if (data.id < 0) {
+        std::cerr << "Error: Module ID cannot be negative." << std::endl;
+        return false;
+    }
+    if (data.name.empty()) {
+        std::cerr << "Error: Module name cannot be empty." << std::endl;
+        return false;
+    }
+    return true;
+}

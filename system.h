@@ -21,6 +21,16 @@ bool system_health_check(void);
 void log_system_health(void);
 void execute_with_watchdog(const std::function<void()>& task);
 
+/**
+ * @brief Validates the system configuration.
+ *
+ * This function checks if the system configuration is valid by ensuring
+ * that all required components are initialized and operational.
+ *
+ * @return true if the configuration is valid, false otherwise.
+ */
+bool validate_system_configuration(void);
+
 #ifdef __cplusplus
 }
 #endif

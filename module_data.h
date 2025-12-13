@@ -85,4 +85,15 @@ void print_firmware_version();
  */
 bool load_module_data(const std::string& filePath, ModuleData& data);
 
+/**
+ * @brief Validates the module data.
+ *
+ * This function checks if the module data is valid by ensuring
+ * that the module ID is non-negative and the name is not empty.
+ *
+ * @param data The module data to validate.
+ * @return true if the data is valid, false otherwise.
+ */
+bool validate_module_data(const ModuleData& data);
+
 #endif // MODULE_DATA_H
