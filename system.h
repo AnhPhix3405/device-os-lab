@@ -6,6 +6,7 @@
 #include "bootloader.h"
 #include "crypto.h"
 #include "hal/hal_thread.h"
+#include "hal/gpio_hal.h"
 
 #ifdef __cplusplus
 extern "C" {
