@@ -88,6 +88,9 @@ TEST_SOURCES += test/test_services.cpp
 # Add UART protocol files to the build process
 COMMUNICATION_SRC += communication/uart_protocol.cpp
 
+# Add SPI driver source files to the build process
+HAL_SRC += hal/spi_driver.c
+
 # Include modularized makefiles
 include common.mk
 include subdirs.mk
