@@ -78,6 +78,14 @@ void log_error(const std::string& message) {
     log_message(LOG_ERROR, message);
 }
 
+void log_retry_attempt(const std::string& operation, int attempt, int max_attempts) {
+    log_info("Retrying operation: " + operation + ", attempt " + std::to_string(attempt) + " of " + std::to_string(max_attempts));
+}
+
+void log_retry_failure(const std::string& operation, int max_attempts) {
+    log_error("Operation " + operation + " failed after " + std::to_string(max_attempts) + " attempts.");
+}
+
 // C-compatible wrapper functions
 extern "C" {
     void log_info_c(const char* message) {
