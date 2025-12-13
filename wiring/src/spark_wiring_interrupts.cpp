@@ -67,10 +67,12 @@ void call_raw_interrupt_handler(void* data)
 hal_interrupt_extra_configuration_t* configure_interrupt(hal_interrupt_extra_configuration_t& extra, int8_t priority, uint8_t subpriority)
 {
   extra.version = HAL_INTERRUPT_EXTRA_CONFIGURATION_VERSION_1;
-  if (priority >= 0) {
-    extra.IRQChannelPreemptionPriority = (uint8_t)priority;
-    extra.IRQChannelSubPriority = subpriority;
-    return &extra;
+  if (priority >= 0 && priority <= 15) {  // ARM Cortex-M priority range 0-15
+      extra.IRQChannelPreemptionPriority = (uint8_t)priority;
+      if (subpriority <= 15) {  // Validate subpriority range
+          extra.IRQChannelSubPriority = subpriority;
+      }
+      return &extra;
   }
   return nullptr;
 }
