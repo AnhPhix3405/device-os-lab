@@ -51,10 +51,16 @@ void system_power_management_wakeup() {
 }
 
 int system_power_management_set_config(const hal_power_config* conf, void* reserved) {
+    if (!conf) {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     return PowerManager::instance()->setConfig(conf);
 }
 
 int system_power_management_get_config(hal_power_config* conf, void* reserved) {
+    if (!conf) {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     return PowerManager::instance()->getConfig(conf);
 }
 

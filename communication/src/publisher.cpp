@@ -37,6 +37,10 @@ ProtocolError Publisher::send_event(MessageChannel& channel, const char* event_n
     {
         return ProtocolError::INVALID_ARGUMENT;
     }
+    size_t event_name_len = strlen(event_name);
+    if (event_name_len == 0 || event_name_len > MAX_EVENT_NAME_LENGTH) {
+        return ProtocolError::INVALID_ARGUMENT;
+    }
     bool is_system_event = is_system(event_name);
     bool rate_limited = is_rate_limited(is_system_event, time);
     if (rate_limited) {
@@ -73,6 +77,9 @@ ProtocolError Publisher::send_event(MessageChannel& channel, const char* event_n
         e.option(CoapOption::MAX_AGE, ttl); // 14
     }
     if (data_size > 0) {
+        if (!data) {
+            return ProtocolError::INVALID_ARGUMENT;
+        }
         auto max_data_size = std::min(e.maxPayloadSize(), protocol->get_max_event_data_size());
         if (data_size > max_data_size) {
             LOG(WARN, "Event data size exceeds limit of %d bytes", (int)max_data_size);
