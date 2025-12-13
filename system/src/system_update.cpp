@@ -93,7 +93,10 @@ void system_flag_changed(system_flag_t flag, uint8_t oldValue, uint8_t newValue)
 {
     if (flag == SYSTEM_FLAG_STARTUP_LISTEN_MODE)
     {
-        HAL_Core_Write_Backup_Register(BKP_DR_09, newValue ? SAFE_MODE_LISTEN : 0xFFFF);
+        uint32_t regValue = newValue ? SAFE_MODE_LISTEN : 0xFFFF;
+        if (regValue <= 0xFFFF) {  // Validate 16-bit register range
+            HAL_Core_Write_Backup_Register(BKP_DR_09, regValue);
+        }
     }
 #if HAL_PLATFORM_POWER_MANAGEMENT_OPTIONAL
     else if (flag == SYSTEM_FLAG_PM_DETECTION) {
