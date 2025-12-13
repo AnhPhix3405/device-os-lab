@@ -33,6 +33,9 @@ using namespace particle;
 using namespace particle::system;
 
 int ledger_get_instance(ledger_instance** ledger, const char* name, void* reserved) {
+    if (!ledger || !name) {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     RefCountPtr<Ledger> lr;
     CHECK(LedgerManager::instance()->getLedger(lr, name, true /* create */));
     *ledger = reinterpret_cast<ledger_instance*>(lr.unwrap()); // Transfer ownership
@@ -94,6 +97,9 @@ int ledger_get_info(ledger_instance* ledger, ledger_info* info, void* reserved) 
 }
 
 int ledger_open(ledger_stream** stream, ledger_instance* ledger, int mode, void* reserved) {
+    if (!stream || !ledger) {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     auto lr = reinterpret_cast<Ledger*>(ledger);
     if (mode & LEDGER_STREAM_MODE_READ) {
         // Bidirectional streams are not supported as of now
@@ -133,6 +139,9 @@ int ledger_close(ledger_stream* stream, int flags, void* reserved) {
 }
 
 int ledger_read(ledger_stream* stream, char* data, size_t size, void* reserved) {
+    if (!stream || !data || size == 0) {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     auto s = reinterpret_cast<LedgerStream*>(stream);
     size_t n = CHECK(s->read(data, size));
     return n;
