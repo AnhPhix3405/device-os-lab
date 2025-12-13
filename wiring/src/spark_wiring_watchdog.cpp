@@ -53,6 +53,9 @@ int WatchdogClass::getInfo(WatchdogInfo& info) {
 }
 
 int WatchdogClass::onExpired(WatchdogOnExpiredCallback callback, void* context) {
+    if (!callback) {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     CHECK(hal_watchdog_on_expired_callback(instance_, callback, context, nullptr));
     return SYSTEM_ERROR_NONE;
 }
