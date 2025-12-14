@@ -71,6 +71,18 @@ bool CANChannel::transmit(const CANMessage &message)
 
 bool CANChannel::addFilter(uint32_t id, uint32_t mask, HAL_CAN_Filters type)
 {
+    // Validate filter type
+    if (type < HAL_CAN_FILTERS_STANDARD || type > HAL_CAN_FILTERS_EXTENDED) {
+        return false;
+    }
+    // Validate ID and mask based on filter type
+    if (type == HAL_CAN_FILTERS_STANDARD && (id > 0x7FF || mask > 0x7FF)) {
+        return false;  // 11-bit Standard ID
+    }
+    if (type == HAL_CAN_FILTERS_EXTENDED
+        && (id > 0x1FFFFFFF || mask > 0x1FFFFFFF)) {
+        return false;  // 29-bit Extended ID
+    }
     return HAL_CAN_Add_Filter(_channel, id, mask, type, NULL);
 }
 
