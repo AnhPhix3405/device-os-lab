@@ -65,6 +65,10 @@ void NetworkClass::connect(unsigned flags) {
         // Invalid flags provided
         return;
     }
+    // Validate network interface is valid
+    if ((network_interface_t) * this >= NETWORK_INTERFACE_MAX) {
+        return;
+    }
     network_connect(*this, flags, 0, nullptr);
 }
 
@@ -101,6 +105,10 @@ void NetworkClass::listen(bool begin) {
 }
 
 void NetworkClass::setListenTimeout(uint16_t timeout) {
+    // Validate timeout is within reasonable range (max 10 minutes)
+    if (timeout > 600) {
+        timeout = 600;
+    }
     network_set_listen_timeout(*this, timeout, nullptr);
 }
 
@@ -123,6 +131,9 @@ bool NetworkClass::isPreferred() {
 
 IPAddress NetworkClass::resolve(const char* name, bool flushCache) {
     IPAddress addr;
+    if (!name || strlen(name) == 0 || strlen(name) > 253) {
+        return addr;  // Invalid hostname length (RFC 1035: max 253 chars)
+    }
 #if HAL_USE_INET_HAL_POSIX
     struct addrinfo *ai = nullptr;
     struct addrinfo hints = {};
