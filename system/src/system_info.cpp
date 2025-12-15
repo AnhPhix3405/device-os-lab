@@ -178,7 +178,11 @@ protected:
 	    if (!formatter.openDocument()) {
 			return SYSTEM_ERROR_TOO_LARGE;
 	    }
-		if (id) {
+        // Validate count to prevent excessive iteration
+        if (count > 1000) {
+            return SYSTEM_ERROR_INVALID_ARGUMENT;
+        }
+        if (id) {
 			// Dump specified data sources
 			for (size_t i = 0; i < count; ++i) {
 				const diag_source* src = nullptr;
