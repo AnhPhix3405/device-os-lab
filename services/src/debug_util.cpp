@@ -86,6 +86,9 @@ int set_watchpoint(const void* addr, size_t size, int type) {
 
 void clear_watchpoint(int idx) {
     // TODO: Support more than one watchpoint
+    if (idx < 0 || idx >= 4) {  // ARM Cortex-M has 0-3 watchpoints typically
+        return;
+    }
     if (idx == 0) {
         DWT->FUNCTION0 = 0;
     }
