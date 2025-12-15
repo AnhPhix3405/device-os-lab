@@ -27,10 +27,20 @@ namespace particle {
 const char* const ThreadRunnerOptions::THREAD_NAME = "ThreadRunner";
 
 int ThreadRunner::init(Runnable* run, const ThreadRunnerOptions& opts) {
+    if (!run) {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     run_ = run;
     eventHandler_ = opts.eventHandler();
     stop_ = false;
-    if (os_thread_create(&thread_, opts.threadName(), opts.priority(), ThreadRunner::run, this, opts.stackSize()) != 0) {
+    // Validate stack size (min 512 bytes, max 64KB)
+    size_t stackSize = opts.stackSize();
+    if (stackSize < 512 || stackSize > 65536) {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
+    if (os_thread_create(&thread_, opts.threadName(), opts.priority(),
+                         ThreadRunner::run, this, stackSize)
+        != 0) {
         return SYSTEM_ERROR_NO_MEMORY;
     }
     return 0;
