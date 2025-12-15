@@ -52,6 +52,11 @@ void hal_spi_set_data_mode(hal_spi_interface_t spi, uint8_t mode)
 
 void hal_spi_set_clock_divider(hal_spi_interface_t spi, uint8_t rate)
 {
+    // Validate clock divider is a power of 2 (typical values: 2, 4, 8, 16, 32,
+    // 64, 128, 256)
+    if (rate == 0 || (rate & (rate - 1)) != 0 || rate > 256) {
+        return;  // Invalid divider
+    }
 }
 
 uint16_t hal_spi_transfer(hal_spi_interface_t spi, uint16_t data)
@@ -66,6 +71,10 @@ bool hal_spi_is_enabled(hal_spi_interface_t spi)
 
 void hal_spi_transfer_dma(hal_spi_interface_t spi, void* tx_buffer, void* rx_buffer, uint32_t length, hal_spi_dma_user_callback userCallback)
 {
+    // Validate at least one buffer is provided and length is non-zero
+    if ((!tx_buffer && !rx_buffer) || length == 0 || length > 65535) {
+        return;
+    }
 }
 
 void hal_spi_info(hal_spi_interface_t spi, hal_spi_info_t* info, void* reserved)

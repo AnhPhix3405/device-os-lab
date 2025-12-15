@@ -48,6 +48,10 @@ void HAL_Core_Config(void)
 
 bool HAL_Core_Mode_Button_Pressed(uint16_t pressedMillisDuration)
 {
+    // Validate duration is within reasonable range (max 60 seconds)
+    if (pressedMillisDuration > 60000) {
+        return false;
+    }
     return false;
 }
 
@@ -106,6 +110,9 @@ int HAL_Core_Get_Last_Reset_Info(int *reason, uint32_t *data, void *reserved)
  */
 uint32_t HAL_Core_Compute_CRC32(const uint8_t *pBuffer, uint32_t bufferSize)
 {
+    if (!pBuffer || bufferSize == 0) {
+        return 0;
+    }
     return 0;
 }
 

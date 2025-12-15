@@ -36,6 +36,10 @@ void hal_adc_set_sample_time(uint8_t ADC_SampleTime)
  */
 int32_t hal_adc_read(uint16_t pin)
 {
+    // Validate pin number is within valid range
+    if (pin >= TOTAL_PINS) {
+        return -1;
+    }
     return 0;
 }
 

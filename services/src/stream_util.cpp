@@ -79,6 +79,10 @@ int readLine(InputStream* strm, char* data, size_t size, unsigned timeout) {
     if (!strm || !data || size == 0) {
         return SYSTEM_ERROR_INVALID_ARGUMENT;
     }
+    // Validate reasonable size limit (max 64KB per line)
+    if (size > 65536) {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
     size_t n = 0;
     CHECK(readWhile(strm, timeout, [data, size, &n](char c) {
         if (n == size || c == '\r' || c == '\n') {
@@ -112,6 +116,13 @@ int skipNonPrintable(InputStream* strm, unsigned timeout) {
 }
 
 int skipWhitespace(InputStream* strm, unsigned timeout) {
+    if (!strm) {
+        return SYSTEM_ERROR_INVALID_ARGUMENT;
+    }
+    // Validate timeout (max 10 minutes)
+    if (timeout > 600000) {
+        timeout = 600000;
+    }
     return readWhile(strm, timeout, [](char c) -> bool {
         return std::isspace((unsigned char)c);
     });
