@@ -108,6 +108,17 @@ void SPIClass::begin()
     }
 }
 
+void SPIClass::setSpeed(unsigned long speed) {
+    // Validate SPI speed (typical max 50MHz)
+    if (speed == 0 || speed > 50000000) {
+        return;
+    }
+    if (!lock()) {
+        hal_spi_set_clock_divider(_spi, speed, _dividerReference, nullptr);
+        unlock();
+    }
+}
+
 void SPIClass::begin(uint16_t ss_pin)
 {
     if (ss_pin >= TOTAL_PINS || !pinAvailable(ss_pin)) {
