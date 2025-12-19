@@ -42,8 +42,8 @@ USARTSerial::USARTSerial(hal_usart_interface_t serial, const hal_usart_buffer_co
 
 void USARTSerial::begin(unsigned long baud)
 {
-    if (baud == 0)
-    {
+    // Validate baud rate (typical range 300 - 4Mbps)
+    if (baud == 0 || baud > 4000000) {
         return;
     }
   begin(baud, SERIAL_8N1);

@@ -29,6 +29,10 @@
 
 void tone(uint8_t pin, unsigned int frequency, unsigned long duration)
 {
+    // Validate pin number
+    if (pin >= TOTAL_PINS) {
+        return;
+    }
     if (frequency == 0 || frequency > 65535) {
         return;
     }

@@ -37,6 +37,10 @@ void hal_usart_init(hal_usart_interface_t serial, hal_usart_ring_buffer_t *rx_bu
 
 void hal_usart_begin(hal_usart_interface_t serial, uint32_t baud, uint8_t config, void*)
 {
+    // Validate baud rate
+    if (baud == 0 || baud > 4000000) {
+        return;
+    }
 }
 
 void hal_usart_end(hal_usart_interface_t serial)
