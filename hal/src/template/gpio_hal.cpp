@@ -70,6 +70,10 @@ PinFunction hal_pin_validate_function(hal_pin_t pin, PinFunction pinFunction)
  */
 void hal_gpio_mode(hal_pin_t pin, PinMode setMode)
 {
+    // Validate pin and mode
+    if (pin >= TOTAL_PINS || setMode < PIN_MODE_NONE || setMode > AN_INPUT) {
+        return;
+    }
 }
 
 /*
@@ -92,12 +96,20 @@ PinMode HAL_GPIO_Recall_Pin_Mode()
  */
 void hal_gpio_write(uint16_t pin, uint8_t value)
 {
+    // Validate pin number and value
+    if (pin >= TOTAL_PINS || value > 1) {
+        return;
+    }
 }
 
 /*
  * @brief Reads the value of a GPIO pin. Should return either 1 (HIGH) or 0 (LOW).
  */
 int32_t hal_gpio_read(uint16_t pin) {
+    // Validate pin number
+    if (pin >= TOTAL_PINS) {
+        return -1;
+    }
     if (pin >= MAX_GPIO_PINS) {
         return -1;  // Invalid pin
     }
