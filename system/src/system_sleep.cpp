@@ -57,6 +57,11 @@ typedef struct {
 
 #if PLATFORM_ID != PLATFORM_GCC
 network_status_t system_sleep_network_suspend(network_interface_index index) {
+    // Validate network interface index
+    if (index < 0 || index >= NETWORK_INTERFACE_MAX) {
+        network_status_t status = {};
+        return status;
+    }
     network_status_t status = {};
     status.suspended = true;
 
